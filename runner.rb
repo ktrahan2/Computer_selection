@@ -1,6 +1,10 @@
 require_relative 'config/environment'
 
-Cli.new.start_game
+app = Cli.new
+
+#example
+# app.welcome 
+# app.greet_user
 
 
 
