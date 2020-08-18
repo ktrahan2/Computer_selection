@@ -6,5 +6,5 @@ app = Cli.new
 # app.welcome 
 # app.greet_user
 
-
+app.store_introduction
 
