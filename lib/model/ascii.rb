@@ -19,7 +19,7 @@ class Ascii
 
     # ]
     
-    # def random_khajiit
+    # def self.random_khajiit
     #     @@khajiit.sample
     # end
  
