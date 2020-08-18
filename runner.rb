@@ -2,9 +2,8 @@ require_relative 'config/environment'
 
 app = Cli.new
 
-#example
-# app.welcome 
-# app.greet_user
 
+# binding.pry
 app.store_introduction
-
+app.first_question
+binding.pry
