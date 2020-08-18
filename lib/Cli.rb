@@ -1,5 +1,7 @@
 class Cli 
 
+    # could possible create a method that normalize the user input.
+
    attr_accessor :dimensions, :function, :price
 
     def initialize dimensions = nil, function = nil, price = nil
@@ -46,6 +48,7 @@ class Cli
             computer.price <= @price.to_f
         end
         puts final_computer
+        binding.pry
        
         # Recommendation.new at the end of this process to create the recommendation link. maybe this can add it to a wishlist. or we reference the
         # recommendation whenever they click on "wishlist"
