@@ -1,4 +1,4 @@
 development:
   adapter: sqlite3
-  database: db/computer.sqlite3
+  database: db/computer_recommendation.sqlite3
   #change the name of the database to what our project is based on
