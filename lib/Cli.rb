@@ -47,9 +47,14 @@ class Cli
         final_computer = computer_selected.select do |computer| 
             computer.price <= @price.to_f
         end
-        puts final_computer
+        puts "#{final_computer.pluck(:brand)}" + "#{final_computer.pluck(:model)}"   
         binding.pry
-       
+       #the price comparison is returning all of the computers equal to or less then the user input price, maybe we dont want this, try to find a way
+            # to set the price selection equal to the closest number
+       #would be beneficial to normalize the users input since capitalize doesnt work because most of them have two names. need to capitalize both names
+       #need to add in what happens if they dont input the right information 
+
+
         # Recommendation.new at the end of this process to create the recommendation link. maybe this can add it to a wishlist. or we reference the
         # recommendation whenever they click on "wishlist"
         
