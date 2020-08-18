@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 2020_08_18_154658) do
   create_table "computers", force: :cascade do |t|
     t.string "brand"
     t.string "model"
-    t.decimal "price"
+    t.float "price"
     t.string "function"
     t.string "dimensions"
     t.string "status"
