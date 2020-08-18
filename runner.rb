@@ -5,5 +5,5 @@ app = Cli.new
 
 # binding.pry
 app.store_introduction
-app.first_question
+app.computer_questions
 binding.pry

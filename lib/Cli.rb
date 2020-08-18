@@ -13,11 +13,29 @@ class Cli
         puts "Welcome #{name}, Khajiit is here to serve."
     end
 
-    def first_question
-        puts Ascii.store_name
+    def computer_questions
+        @dimensions = nil
+        @function = nil
+        puts Ascii.store_name #change later to khajiit random ascii
         puts "Are you looking for a laptop or desktop?"
-        dimension = gets.chomp
-        puts "Awesome we have plenty of #{dimension}s"
+        @dimensions = gets.chomp
+        puts "Awesome we have plenty of #{@dimensions}s"
+        puts Ascii.store_name #change later to khajiit random ascii
+        puts "In stock we have komputers efficient in gaming, video editing, programming or web browsing. What do you need?"
+        @function = gets.chomp
+        puts "Fantastic Khajiit loves #{@function}."
+        puts Ascii.store_name #change later to khajiit random ascii
+        puts "Finally, how much are you looking to spend?"
+        price = gets.chomp
+        puts Ascii.store_name #change later to khajiit random ascii
+        puts "Khajiit knows just the one!"
+        computer_selection = Computer.where(dimensions: @dimensions, function: @function) #add price whenever figure out how to.
+        binding.pry
+        puts Ascii.store_name #change later
+        puts "Khajiit has listened and chosen:"
+        puts computer_selection.computers.map { }
+        # Recommendation.new at the end of this process
+        # make.models.pluck(:name).map { |name| puts name}
     end
         
 end
