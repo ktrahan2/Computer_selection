@@ -1,12 +1,20 @@
 class Cli 
 
     def store_front
-
-        prompt.select("Choose one option") do |menu|
+        prompt = TTY::Prompt.new
+        main_menu = prompt.select("Choose one option") do |menu|
             # menu.cycle true  # so that selection cycles around when reach top or bottom
-            menu.choice "Find Computer", store_introduction
+            menu.choice "Find Computer", 1 #store_introduction
             menu.choice "Wishlist", 2 #wishlist
             menu.choice "Refer to a friend", 3 # desired value
+        end
+
+        if main_menu == 1
+            store_introduction
+        elsif main_menu == 2
+            p "Wish List"
+        elsif main_menu == 3
+            p "Refer to a friend"
         end
     end
 
