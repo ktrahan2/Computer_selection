@@ -1,5 +1,5 @@
 class Cli 
-
+  
    attr_accessor :dimensions, :function, :price, :user, :name, :age, :email, :final_computer
 
     def initialize dimensions = nil, function = nil, price = nil, user = nil, name = nil, age = nil, email = nil, final_computer = nil
@@ -14,6 +14,31 @@ class Cli
     end
     #look into cleaning this up? possible to move some functions around so there are less intialized attributes? 
     #does it even matter?
+  
+    def store_front
+        prompt = TTY::Prompt.new
+        main_menu = prompt.select("Choose one option") do |menu|
+            # menu.cycle true  # so that selection cycles around when reach top or bottom
+            menu.choice "Find Computer", 1 #store_introduction
+            menu.choice "Wishlist", 2 #wishlist
+            menu.choice "Refer to a friend", 3 # desired value
+        end
+
+        if main_menu == 1
+            store_introduction
+        elsif main_menu == 2
+            p "Wish List"
+        elsif main_menu == 3
+            p "Refer to a friend"
+        end
+    end
+
+    # def brands
+    #     prompt.multi_select("Choose the brands you like: ", brands)
+    #     # brands can be an unique array of all the brands in our database 
+    #     # .multi_select will always return an array by default populated
+    #     # with the names of choices. Can return custom values. 
+    # end
     
     def select_name
         puts "What is your full name?" #.colorize( :blue ).colorize( :background => :green)
@@ -111,8 +136,7 @@ class Cli
                 computer_selection
             else
                 puts "Thanks for visitng Khajiits Komputers. Have a nice day!"
-                #exit app
-                #make a method to exit the store
+                store_front
             end
         else
             puts "Would you like to get a new recommendation y/n?"
@@ -121,8 +145,7 @@ class Cli
                 computer_selection 
             else     
                 puts "Thanks for visting Khajiits Komputers. Have a nice day!"
-                #exit app
-                #make a method to exit the store
+                store_front
             end
         end
     end
