@@ -48,6 +48,7 @@ class Cli
         puts "Welcome #{@name}, Khajiit is here to serve."
         system "clear"
         sleep(2)
+        computer_selection
     end
 
     def select_dimensions
@@ -143,6 +144,7 @@ class Cli
             computer.price <= @price.to_f
         end
         @final_computer.max_by(0) { |x| x.length }
+        sleep(2)
         puts @final_computer[0].brand + " " + @final_computer[0].model
         recommend
     end
