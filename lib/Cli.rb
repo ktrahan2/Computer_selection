@@ -16,7 +16,7 @@ class Cli
     
     def select_name
         puts "What is your full name?"
-        @name = gets.chomp
+        @name = gets.chomp.downcase
     end
 
     def select_age
@@ -28,21 +28,25 @@ class Cli
         else
         end
     end
-    #could adjust it to make them put in a valid email, dont care that much right now.
+    #could adjust it to make them put in a valid email with @###.com, dont care that much right now.
     def select_email
-        puts "Whats your email?"
+        puts "Whats your email? Remember your email is case sensitive!"
         @email = gets.chomp
     end
 
-    #gets some information from the user and also inputs it into the Customer table
+    #gets some information from the user and also inputs a new row into the Customer table
     def store_introduction 
         puts Ascii.store_name 
-        puts "Khajiits has computers if you have answers!"
+        puts "Khajiit has computers if you have answers!"
         select_name
+        sleep(1)
         select_age
+        sleep(1)
         select_email
+        sleep(1)
         @user = Customer.create(name: @name, age: @age, email: @email)
         puts "Welcome #{@name}, Khajiit is here to serve."
+        sleep(2)
     end
 
     def select_dimensions
@@ -63,7 +67,7 @@ class Cli
         @function = gets.chomp.downcase
         case @function
         when "gaming"
-            puts "Fantastic Khajiit loves #{@function}."
+            puts "Fantastic Khajiit loves #{@function}. My favorite game is Hello Kitty Island Adventure"
         when "video editing"
             puts "Fantastic Khajiit loves #{@function}."
         when "web development"
@@ -119,7 +123,7 @@ class Cli
     end
  
    #collects information and returns a single computer based off of user input, allows user to save the recommendation to
-   #hopefully be access later
+   #hopefully be accessed later
     def computer_selection
         select_dimensions
         select_function
