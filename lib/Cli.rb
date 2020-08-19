@@ -135,7 +135,7 @@ class Cli
             if answer_three == "y"
                 computer_selection
             else
-                puts "Thanks for visitng Khajiits Komputers. Have a nice day!"
+                puts "Thanks for visiting Khajiits Komputers. Have a nice day!"
                 store_front
             end
         else
