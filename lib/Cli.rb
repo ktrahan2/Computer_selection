@@ -24,12 +24,13 @@ class Cli
         puts "How old are you?"
         @age = gets.chomp
         if (age != '0') && (age.to_i.to_s != age.strip)
-            puts "Please pick a number!"
+            puts "Khajiit can only read ages in numbers!"
             sleep(2)
             select_age
         else
         end
     end
+
     #could adjust it to make them put in a valid email with @###.com, dont care that much right now.
     def select_email
         puts "Whats your email? Remember your email is case sensitive!"
@@ -91,7 +92,7 @@ class Cli
             sleep(2)
             select_price
         else
-            puts "Khajiit is pleased!"
+            puts "Rahjin's shadow, Khajiit is pleased!"
         end
     end
 
