@@ -21,7 +21,7 @@ class Cli
             # menu.cycle true  # so that selection cycles around when reach top or bottom
             menu.choice "Find Computer", 1 #store_introduction
             menu.choice "Wishlist", 2 #wishlist
-            menu.choice "Refer to a friend", 3 # desired value
+            menu.choice "Choose by brand", 3 # desired value
         end
 
         if main_menu == 1
@@ -29,16 +29,24 @@ class Cli
         elsif main_menu == 2
             wishlist
         elsif main_menu == 3
-            p "Refer to a friend"
+            brands
         end
     end
 
-    # def brands
-    #     prompt.multi_select("Choose the brands you like: ", brands)
-    #     # brands can be an unique array of all the brands in our database 
-    #     # .multi_select will always return an array by default populated
-    #     # with the names of choices. Can return custom values. 
-    # end
+    def brands
+        prompt = TTY::Prompt.new
+        choices = Computer.all.map {|computer| computer.brand}
+        chosen = prompt.multi_select("Choose the brands you like: ", choices.uniq)
+        puts "Here are the computers we have from those specific brands: "
+        for i in 0...chosen.length do
+            computer = Computer.where brand: chosen[i]
+            # binding.pry
+            puts chosen[i]   
+            computer.each do |comp|
+                puts comp.model + " " + comp.function + " " + comp.price.to_s
+            end
+        end
+    end
     
     def select_name
         puts "What is your full name?" #.colorize( :blue ).colorize( :background => :green)
