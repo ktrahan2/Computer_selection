@@ -61,10 +61,25 @@ class Cli
         end
     end
 
+    def select_friends_age
+        puts "How old is your friend?"
+        @friends_age = gets.chomp
+        if (@friends_age != '0') && (@friends_age.to_i.to_s != @friends_age.strip)
+            puts "Khajiit can only read ages in numbers!"
+            sleep(2)
+            select_friends_age
+        else
+        end
+    end
     #could adjust it to make them put in a valid email with @###.com, dont care that much right now.
     def select_email
         puts "Whats your email? Remember your email is case sensitive!"
         @email = gets.chomp
+    end
+
+    def select_friends_email
+        puts "Whats your friends email? Remember the email is case sensitive!"
+        @friends_email = gets.chomp
     end
 
     #gets some information from the user and also inputs a new row into the Customer table
@@ -154,7 +169,7 @@ class Cli
             end
         end
     end
-
+    #this method is huge, could be worked down. 
     def refer_to_a_friend
         puts "Would you like to recommend this computer to a friend y/n?"
         answer = gets.chomp.downcase
@@ -162,14 +177,24 @@ class Cli
             puts "Has your friend visited us before y/n?"
             answer_two = gets.chomp.downcase
             if answer_two == "y"
-                puts "Awesome what is your friends name?"
+                puts "What is your friends full name?"
                 friend_name = gets.chomp.downcase
                 friend_account = Customer.find_by name: friend_name 
                 Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend_account.id, number: rand(10 ** 10))
-                puts "Absolutely wonderful! We'll add that computer to #{friend_name}s recommendation"
+                puts "Absolutely wonderful! We'll add that computer to #{friend_name}s recommendations"
+                sleep(2)
+                store_front
             else
-                # method for making a customer row for a friend
-                
+                puts "I will just need a little bit of information about your friend!"
+                select_friends_name
+                select_friends_age
+                select_friends_email
+                friend = Customer.create(name: @friends_name, age: @friends_age, email: @friends_email)
+                puts "Perfect your friend has been added to our memberslist!"
+                Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend.id, number: rand(10 ** 10))
+                puts "Wonderful! We'll add that computer to #{@friends_name}s recommendations!"
+                sleep(2)
+                store_front 
             end
         else
             puts "No worries, Khajiit doesn't have any friends either. Have a good day!"
