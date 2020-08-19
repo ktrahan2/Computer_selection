@@ -27,7 +27,7 @@ class Cli
         if main_menu == 1
             store_introduction
         elsif main_menu == 2
-            p "Wish List"
+            wishlist
         elsif main_menu == 3
             p "Refer to a friend"
         end
@@ -135,7 +135,7 @@ class Cli
             if answer_three == "y"
                 computer_selection
             else
-                puts "Thanks for visitng Khajiits Komputers. Have a nice day!"
+                puts "Thanks for visiting Khajiits Komputers. Have a nice day!"
                 store_front
             end
         else
@@ -170,6 +170,18 @@ class Cli
         sleep(2)
         puts @final_computer[0].brand + " " + @final_computer[0].model
         recommend
+    end
+
+    def wishlist
+        puts "Provide your name: "
+        name = gets.chomp.downcase
+        customer = Customer.find_by name: name
+        recommended_computers = customer.computers
+        puts "Here are your recommendations!"
+        for i in 0...recommended_computers.length do
+            puts recommended_computers[i].brand + " " + recommended_computers[i].model
+        end
+        binding.pry
     end
         
 end
