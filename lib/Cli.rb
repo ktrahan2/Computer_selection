@@ -136,8 +136,7 @@ class Cli
                 computer_selection
             else
                 puts "Thanks for visitng Khajiits Komputers. Have a nice day!"
-                #exit app
-                #make a method to exit the store
+                store_front
             end
         else
             puts "Would you like to get a new recommendation y/n?"
@@ -146,8 +145,7 @@ class Cli
                 computer_selection 
             else     
                 puts "Thanks for visting Khajiits Komputers. Have a nice day!"
-                #exit app
-                #make a method to exit the store
+                store_front
             end
         end
     end
