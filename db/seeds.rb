@@ -1,6 +1,7 @@
 Recommendation.destroy_all
 Computer.destroy_all
 
+
 webdevlaptop1 = Computer.create(brand: "Apple" , model: "MacBook Pro" , price: 1799.00 , function: "web development" , dimensions: "Laptop"  , status: "New" , warranty: "Yes")
 webdevlaptop2 = Computer.create(brand: "LG" , model: "Gram" , price: 1405.99 , function: "web development" , dimensions: "Laptop"  , status: "New" , warranty: "Yes")
 webdevlaptop3 = Computer.create(brand: "Asus" , model: "Zenbook 13" , price: 604.43 , function: "web development" , dimensions: "Laptop"  , status: "New" , warranty: "Yes")

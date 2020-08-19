@@ -12,7 +12,8 @@ class Cli
         @email = nil
         @final_computer = nil
     end
-    #look into cleaning this up? possible to move some functions around so there are less intialized attributes?
+    #look into cleaning this up? possible to move some functions around so there are less intialized attributes? 
+    #does it even matter?
     
     def select_name
         puts "What is your full name?"
@@ -24,6 +25,7 @@ class Cli
         @age = gets.chomp
         if (age != '0') && (age.to_i.to_s != age.strip)
             puts "Please pick a number!"
+            sleep(2)
             select_age
         else
         end
@@ -39,11 +41,8 @@ class Cli
         puts Ascii.store_name 
         puts "Khajiit has computers if you have answers!"
         select_name
-        sleep(1)
         select_age
-        sleep(1)
         select_email
-        sleep(1)
         @user = Customer.create(name: @name, age: @age, email: @email)
         puts "Welcome #{@name}, Khajiit is here to serve."
         sleep(2)
@@ -57,6 +56,7 @@ class Cli
             puts "Awesome we have plenty of #{@dimensions}s"
         else
             puts "Please pick either laptop or desktop"
+            sleep(2)
             select_dimensions
         end
     end
@@ -76,6 +76,7 @@ class Cli
             puts "Fantastic Khajiit loves #{@function}."
         else 
             puts "Please pick a valid option!"
+            sleep(2)
             select_function
         end
     end
@@ -87,6 +88,7 @@ class Cli
         @price = gets.chomp
         if (@price != '0') && (@price.to_i.to_s != @price.strip)
             puts "Please pick a number!"
+            sleep(2)
             select_price
         else
             puts "Khajiit is pleased!"
