@@ -108,7 +108,7 @@ class Cli
                 puts "Welcome back! #{@user.name}"
                 computer_selection
             end
-        else
+        elsif answer == "y"
         puts "Khajiit has computers if you have answers!"
         select_name
         select_age
@@ -118,6 +118,9 @@ class Cli
         system "clear"
         sleep(2)
         computer_selection
+        else
+            puts "Please enter y or n"
+            store_introduction
         end
     end
 
