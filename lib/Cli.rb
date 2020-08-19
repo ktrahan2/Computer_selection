@@ -12,8 +12,8 @@ class Cli
         @email = nil
         @final_computer = nil
     end
+    #look into cleaning this up? possible to move some functions around so there are less intialized attributes?
     
-   
     def select_name
         puts "What is your full name?"
         @name = gets.chomp
@@ -28,7 +28,7 @@ class Cli
         else
         end
     end
-
+    #could adjust it to make them put in a valid email, dont care that much right now.
     def select_email
         puts "Whats your email?"
         @email = gets.chomp
@@ -52,7 +52,7 @@ class Cli
         if @dimensions == "laptop" || @dimensions == "desktop"
             puts "Awesome we have plenty of #{@dimensions}s"
         else
-            puts "Please pick a valid option"
+            puts "Please pick either laptop or desktop"
             select_dimensions
         end
     end
@@ -95,33 +95,32 @@ class Cli
         if answer == "y"
             puts "The #{@final_computer[0].brand} computer has been added to your recommendations list."
             Recommendation.create(computer_id: @final_computer[0].id, customer_id: @user.id, number: rand(10** 10))
+            #look into saving Recommendation to @recommendation so you can access it through another method later.
             puts "Would you like to get another recommendation y/n>"
             answer_three = gets.chomp
             if answer_three == "y"
                 computer_selection
             else
                 puts "Thanks for visitng Khajiits Komputers. Have a nice day!"
-                #return to store front
-                #make method to return to store front
+                #exit app
+                #make a method to exit the store
             end
         else
             puts "Would you like to get a new recommendation y/n?"
             answer_two = gets.chomp
             if answer_two == "y"
-                computer_selection #try to revamp this to start at the select dimensions within computer selection
+                computer_selection 
             else     
                 puts "Thanks for visting Khajiits Komputers. Have a nice day!"
-            #return to store front
-            #make a method to return to the store front
+                #exit app
+                #make a method to exit the store
             end
         end
     end
-
-    
-        
-   #collects information and returns a single computer based off of user input
+ 
+   #collects information and returns a single computer based off of user input, allows user to save the recommendation to
+   #hopefully be access later
     def computer_selection
-        # store_introduction
         select_dimensions
         select_function
         select_price
@@ -135,7 +134,5 @@ class Cli
         puts @final_computer[0].brand + " " + @final_computer[0].model
         recommend
     end
-       
-   
         
 end
