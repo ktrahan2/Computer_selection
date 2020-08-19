@@ -1,4 +1,3 @@
-Recommendation.destroy_all
 Computer.destroy_all
 
 webdevlaptop1 = Computer.create(brand: "Apple" , model: "MacBook Pro" , price: 1799.00 , function: "Web Development" , dimensions: "Laptop"  , status: "New" , warranty: "Yes")
