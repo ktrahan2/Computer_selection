@@ -46,6 +46,7 @@ class Cli
         select_email
         @user = Customer.create(name: @name, age: @age, email: @email)
         puts "Welcome #{@name}, Khajiit is here to serve."
+        system "clear"
         sleep(2)
     end
 
@@ -128,9 +129,13 @@ class Cli
    #collects information and returns a single computer based off of user input, allows user to save the recommendation to
    #hopefully be accessed later
     def computer_selection
+        #add some type of ascii art
+        puts "Time to find out what kind of komputer you are looking for!"
+        sleep(2)
         select_dimensions
         select_function
         select_price
+        system "clear"
         computer_selected = Computer.where(dimensions: @dimensions.capitalize, function: @function) 
         puts Ascii.store_name #change later to khajiit random ascii
         puts "Khajiit has listened and chosen:"
