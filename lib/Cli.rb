@@ -19,8 +19,8 @@ class Cli
         prompt = TTY::Prompt.new
         main_menu = prompt.select("Choose one option") do |menu|
             # menu.cycle true  # so that selection cycles around when reach top or bottom
-            menu.choice "Find Computer", 1 #store_introduction
-            menu.choice "Wishlist", 2 #wishlist
+            menu.choice "Find Computer with Khajiit!", 1 #store_introduction
+            menu.choice "Wishlist", 2 #wishlist #maybe rename this to recommendations/returning customer recommendations
             menu.choice "Choose by brand", 3 # desired value
         end
 
@@ -101,8 +101,13 @@ class Cli
             user_name = gets.chomp.downcase
             # binding.pry
             @user = Customer.find_by name: user_name
-            puts "Welcome back! #{@user.name}"
-            computer_selection
+            if !@user
+                puts "I don't think you have been here before!"
+                store_introduction
+            else
+                puts "Welcome back! #{@user.name}"
+                computer_selection
+            end
         else
         puts "Khajiit has computers if you have answers!"
         select_name
