@@ -33,13 +33,6 @@ class Cli
         end
     end
 
-    # def brands
-    #     prompt.multi_select("Choose the brands you like: ", brands)
-    #     # brands can be an unique array of all the brands in our database 
-    #     # .multi_select will always return an array by default populated
-    #     # with the names of choices. Can return custom values. 
-    # end
-    
     def select_name
         puts "What is your full name?" #.colorize( :blue ).colorize( :background => :green)
         @name = gets.chomp.downcase
@@ -84,7 +77,18 @@ class Cli
 
     #gets some information from the user and also inputs a new row into the Customer table
     def store_introduction 
-        puts Ascii.store_name 
+        puts Ascii.store_name
+        puts "Welcome to Khoosing a Komputer with Khajiit" 
+        puts "Is this your first time visiting Khajiit y/n?"
+        answer = gets.chomp.downcase
+        if answer == "n"
+            puts "Remind Khajiit what your name is?"
+            user_name = gets.chomp.downcase
+            # binding.pry
+            @user = Customer.find_by name: user_name
+            puts "Welcome back! #{@user.name}"
+            computer_selection
+        else
         puts "Khajiit has computers if you have answers!"
         select_name
         select_age
@@ -94,6 +98,7 @@ class Cli
         system "clear"
         sleep(2)
         computer_selection
+        end
     end
 
     def select_dimensions
@@ -198,6 +203,7 @@ class Cli
             end
         else
             puts "No worries, Khajiit doesn't have any friends either. Have a good day!"
+            sleep(2)
             store_front
         end
     end
