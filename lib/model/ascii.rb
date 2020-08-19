@@ -12,11 +12,6 @@ class Ascii
     end
     
     # @@khajiit = [
-        
-            
-
-
-
     # ]
     
     # def self.random_khajiit
