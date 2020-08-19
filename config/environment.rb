@@ -1,4 +1,6 @@
 require 'bundler/setup'
+require 'colorize'
+require 'colorized_string'
 Bundler.require
 
 

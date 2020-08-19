@@ -1,3 +1,5 @@
+
+
 class Cli 
 
    attr_accessor :dimensions, :function, :price, :user, :name, :age, :email, :final_computer
@@ -16,7 +18,7 @@ class Cli
     #does it even matter?
     
     def select_name
-        puts "What is your full name?"
+        puts "What is your full name?".colorize( :blue )
         @name = gets.chomp.downcase
     end
 
