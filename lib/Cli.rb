@@ -13,7 +13,7 @@ class Cli
         @final_computer = nil
     end
   
-    #possibly change order of mainmenu to be Find a computer with Khajiit, chooce by brand, wishlist
+    #possibly change order of mainmenu to be Find a computer with Khajiit, choose by brand, wishlist
     def store_front
         prompt = TTY::Prompt.new
         main_menu = prompt.select("Choose one option") do |menu|
