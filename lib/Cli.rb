@@ -132,10 +132,13 @@ class Cli
     end
  
     def select_dimensions
-        puts Ascii.store_name #change later to khajiit random ascii
         puts "Are you looking for a laptop or desktop?"
         @dimensions = gets.chomp.downcase
-        if @dimensions == "laptop" || @dimensions == "desktop"
+        if @dimensions == "laptop"
+            puts Ascii.laptop
+            puts "Awesome we have plenty of #{@dimensions}s"
+        elsif  @dimensions == "desktop"
+            puts Ascii.desktop
             puts "Awesome we have plenty of #{@dimensions}s"
         else
             puts "Please pick either laptop or desktop"
@@ -145,17 +148,20 @@ class Cli
     end
 
     def select_function
-        puts Ascii.store_name #change later to khajiit random ascii
         puts "In stock we have komputers efficient in gaming, video editing, web development or web browsing. What do you need?"
         @function = gets.chomp.downcase
         case @function
         when "gaming"
+            puts Ascii.gaming
             puts "Fantastic Khajiit loves #{@function}. My favorite game is Hello Kitty Island Adventure"
         when "video editing"
+            puts Ascii.video_editing
             puts "Fantastic Khajiit loves #{@function}."
         when "web development"
+            puts Ascii.web_development
             puts "Fantastic Khajiit loves #{@function}."
         when "web browsing"
+            puts Ascii.web_browsing
             puts "Fantastic Khajiit loves #{@function}."
         else 
             puts "Please pick a valid option!"
