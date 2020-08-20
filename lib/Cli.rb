@@ -13,6 +13,7 @@ class Cli
         @final_computer = nil
     end
   
+    #possibly change order of mainmenu to be Find a computer with Khajiit, chooce by brand, wishlist
     def store_front
         prompt = TTY::Prompt.new
         main_menu = prompt.select("Choose one option") do |menu|
@@ -46,7 +47,7 @@ class Cli
     end
     
     def select_name
-        puts "What is your full name?" #.colorize( :blue ).colorize( :background => :green)
+        puts "What is your full name?" #.colorize( :blue ).colorize( :background => :green) just testing colors
         @name = gets.chomp.downcase
     end
 
@@ -88,26 +89,22 @@ class Cli
         @friends_email = gets.chomp
     end
 
-    #gets some information from the user and also inputs a new row into the Customer table
-    def store_introduction 
-        puts Ascii.store_name
-        puts "Welcome to Khoosing a Komputer with Khajiit" 
-        puts "Is this your first time visiting Khajiit y/n?"
-        answer = gets.chomp.downcase
-        if answer == "n"
-            puts "Remind Khajiit what your name is?"
-            user_name = gets.chomp.downcase
-            # binding.pry
-            @user = Customer.find_by name: user_name
-            if !@user
-                puts "I don't think you have been here before!"
-                sleep(2)
-                store_introduction
-            else
-                puts "Welcome back! #{@user.name}"
-                computer_selection
-            end
-        elsif answer == "y"
+    def returning_customer
+        puts "Remind Khajiit what your name is?"
+        user_name = gets.chomp.downcase
+        @user = Customer.find_by name: user_name
+        if !@user
+            puts "I don't think you have been here before!"
+            sleep(2)
+            new_customer
+        else
+            puts "Welcome back! #{@user.name}"
+            sleep(1)
+            computer_selection
+        end
+    end
+
+    def new_customer    
         puts "Khajiit has computers if you have answers!"
         select_name
         select_age
@@ -117,13 +114,25 @@ class Cli
         system "clear"
         sleep(2)
         computer_selection
+    end
+
+    #checks if its a returning customer or new customer and either finds that customer or makes a new one. 
+    def store_introduction 
+        puts Ascii.store_name
+        puts "Welcome to Khoosing a Komputer with Khajiit" 
+        puts "Is this your first time visiting Khajiit y/n?"
+        answer = gets.chomp.downcase
+        if answer == "n"
+            returning_customer
+        elsif answer == "y"
+            new_customer
         else
             puts "Please enter y or n"
+            sleep(2)
             store_introduction
         end
     end
  
-
     def select_dimensions
         puts Ascii.store_name #change later to khajiit random ascii
         puts "Are you looking for a laptop or desktop?"
