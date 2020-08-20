@@ -298,9 +298,10 @@ class Cli
         @final_computer = computer_selected.select do |computer| 
             computer.price <= @price.to_f
         end
-        @final_computer.max_by(0) { |x| x.length }
+        @final_computer.max_by(0) { |x| x.price }
         sleep(2)
         puts @final_computer[0].brand + " " + @final_computer[0].model
+      
         recommend
         sleep(2)
         refer_to_a_friend
