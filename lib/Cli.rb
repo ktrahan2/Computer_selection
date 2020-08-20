@@ -325,7 +325,7 @@ class Cli
                 store_front
             else
                 selected = @prompt.multi_select("Which models would you like to delete from your wishlist?", array_brands, help: "Scroll with arrows and select with space bar! Hit enter to finalize.", show_help: :always, min: 0, filter: true)
-                variable = selected.each do |select|
+                selected.each do |select|
                     recommended_computers.each do |computer|
                         if computer.model == select
                             Recommendation.where(customer_id: customer.id, computer_id: computer.id).destroy_all
