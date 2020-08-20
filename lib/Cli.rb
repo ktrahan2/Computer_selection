@@ -45,12 +45,15 @@ class Cli
         choices = Computer.all.map {|computer| computer.brand}
         chosen = @prompt.multi_select("Choose the brands you like: ", choices.uniq, help: "Scroll with arrows and select with space bar!", show_help: :always, min: 1, filter: true)
         puts "Here are the computers we have available: "
+        puts " "
         for i in 0...chosen.length do
             computer = Computer.where brand: chosen[i]
             puts chosen[i]   
+            puts " "
             computer.each do |comp|
-                puts comp.model + " " + comp.function + " " + comp.price.to_s
-            end
+                puts comp.model + " " + "for" + " " + comp.function + " " + "at" + " " + "$" + comp.price.to_s
+            end 
+            puts " "
         end
         main_menu = @prompt.select("Where would you like to go next: ") do |menu|
             menu.choice "Find a Computer with Khajiit!", 1
@@ -185,6 +188,7 @@ class Cli
     #returns the price the user is willing to spend, should repeat select_price if it isnt a valid entry
     def select_price
         puts "Finally, how much are you looking to spend? ($1000 = $1.000)"
+        puts " "
         puts Ascii.price
         case @function
         when "gaming"
@@ -317,16 +321,16 @@ class Cli
             store_front
         else
             recommended_computers = customer.computers
-            puts "Here are your saved recommendations!"
             array_brands = Array.new
             for i in 0...recommended_computers.length do
                 array_brands << recommended_computers[i].model #+ " " + recommended_computers[i].price.to_s
             end
-            puts array_brands
             if array_brands.size == 0
                 puts "Sorry, you do not have any saved recommendations yet!"
                 store_front
             elsif array_brands.size == 1
+                puts "Here are your saved recommendations!"
+                puts array_brands
                 answer = @prompt.yes?("Would you like to delete this model from your wishlist?")
                 if answer == true
                 Recommendation.where(customer_id: customer.id).destroy_all
@@ -335,6 +339,8 @@ class Cli
                 end
                 store_front
             else
+                puts "Here are your saved recommendations!"
+                puts array_brands
                 selected = @prompt.multi_select("Which models would you like to delete from your wishlist?", array_brands, help: "Scroll with arrows and select with space bar! Hit enter to finalize.", show_help: :always, min: 0, filter: true)
                 variable = selected.each do |select|
                     recommended_computers.each do |computer|
