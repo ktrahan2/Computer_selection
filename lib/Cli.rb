@@ -219,7 +219,8 @@ class Cli
         friend_account = Customer.find_by name: friend_name 
         if !friend_account
             puts "I don't think your friend has been here before!"
-            refer_to_a_friend
+            sleep(1)
+            create_account_for_friend
         else
             Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend_account.id, number: rand(10 ** 10))
             puts "Absolutely wonderful! We'll add that computer to #{friend_name}s recommendations"
