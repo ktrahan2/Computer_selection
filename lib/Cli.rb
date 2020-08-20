@@ -320,7 +320,7 @@ class Cli
             puts "Here are your saved recommendations!"
             array_brands = Array.new
             for i in 0...recommended_computers.length do
-                array_brands << recommended_computers[i].model + " " + recommended_computers[i].price.to_s
+                array_brands << recommended_computers[i].model #+ " " + recommended_computers[i].price.to_s
             end
             puts array_brands
             if array_brands.size == 0
@@ -331,8 +331,16 @@ class Cli
                 Recommendation.where(customer_id: customer.id).destroy_all
             else
                 selected = @prompt.multi_select("Which models would you like to delete from your wishlist?", array_brands, help: "Scroll with arrows and select with space bar!", show_help: :always, min: 1, filter: true)
-                Recommendation.where(customer_id: customer.id)
+                variable = selected.each do |select|
+                    recommended_computers.each do |computer|
+                        if computer.model == select
+                            Recommendation.where(customer_id: customer.id, computer_id: computer.id).destroy_all
+                        end
+                    end
+                end
+                # Recommendation.where(customer_id: customer.id)
             end
+            binding.pry
         end
     end
 end
