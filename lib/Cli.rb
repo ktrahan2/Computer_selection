@@ -19,7 +19,7 @@ class Cli
         prompt = TTY::Prompt.new
         main_menu = prompt.select("Choose one option") do |menu|
             # menu.cycle true  # so that selection cycles around when reach top or bottom
-            menu.choice "Find a     Computer with Khajiit!", 1 #store_introduction
+            menu.choice "Find a Computer with Khajiit!", 1 #store_introduction
             menu.choice "Wishlist", 2 #wishlist #maybe rename this to recommendations/returning customer recommendations
             menu.choice "Choose by brand", 3 # desired value
         end
@@ -102,6 +102,7 @@ class Cli
             @user = Customer.find_by name: user_name
             if !@user
                 puts "I don't think you have been here before!"
+                sleep(2)
                 store_introduction
             else
                 puts "Welcome back! #{@user.name}"
@@ -171,6 +172,19 @@ class Cli
         end
     end
 
+    def new_recommendation
+        puts "Would you like to get a new recommendation y/n?"
+        answer_two = gets.chomp.downcase
+        if answer_two == "y"
+                computer_selection 
+        elsif answer_two == "n"  
+                puts "Thanks for visting Khajiits Komputers. Have a nice day!"
+        else
+                puts "Please select y or n!"
+                new_recommendation
+        end
+    end
+    
     def recommend
         puts "Would you like to add this computer to your recommendations y/n?"
         answer = gets.chomp.downcase
@@ -182,19 +196,17 @@ class Cli
             answer_three = gets.chomp.downcase
             if answer_three == "y"
                 computer_selection
-            else
+            elsif answer_three == "n"
                 puts "Thanks for visiting Khajiits Komputers. Have a nice day!"
-                # store_front
+            else
+                puts "Please select y or n!"
+                recommend
             end
+        elsif answer == "n"
+            new_recommendation
         else
-            puts "Would you like to get a new recommendation y/n?"
-            answer_two = gets.chomp.downcase
-            if answer_two == "y"
-                computer_selection 
-            else     
-                puts "Thanks for visting Khajiits Komputers. Have a nice day!"
-                # store_front
-            end
+            puts "Please select y or n"
+            recommend
         end
     end
   
@@ -230,10 +242,13 @@ class Cli
                 sleep(2)
                 store_front 
             end
-        else
+        elsif answer == "n"
             puts "No worries, Khajiit doesn't have any friends either. Have a good day!"
             sleep(2)
             store_front
+        else
+            puts "Please select y or n!"
+            refer_to_a_friend
         end
     end
 
