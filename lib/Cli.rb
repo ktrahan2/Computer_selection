@@ -6,7 +6,7 @@ class Cli
         # help_color = Pastel.new.italic.bright_yellow.detach
         TTY::Prompt.new(
         symbols: { marker: '>' },
-        active_color: :cyan,
+        active_color: :red,
         help_color: :bright_cyan
         )
     end
@@ -172,7 +172,7 @@ class Cli
 
     #returns the price the user is willing to spend, should repeat select_price if it isnt a valid entry
     def select_price
-        puts Ascii.store_name #change later to khajiit random ascii
+        puts Ascii.store_name 
         puts "Finally, how much are you looking to spend? ($1000 = $1.000)"
         case @function
         when "gaming"
