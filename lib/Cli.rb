@@ -5,9 +5,11 @@ class Cli
     def tty_prompt
         # help_color = Pastel.new.italic.bright_yellow.detach
         TTY::Prompt.new(
+
         symbols: { marker: '💻' },
         active_color: :red,
         help_color: :red
+
         )
     end
 
@@ -187,6 +189,7 @@ class Cli
 
     #returns the price the user is willing to spend, should repeat select_price if it isnt a valid entry
     def select_price
+ 
         puts "Finally, how much are you looking to spend? ($1000 = $1.000)"
         puts " "
         puts Ascii.price
@@ -346,7 +349,7 @@ class Cli
                 puts "Here are your saved recommendations!"
                 puts array_brands
                 selected = @prompt.multi_select("Which models would you like to delete from your wishlist?", array_brands, help: "Scroll with arrows and select with space bar! Hit enter to finalize.", show_help: :always, min: 0, filter: true)
-                variable = selected.each do |select|
+                selected.each do |select|
                     recommended_computers.each do |computer|
                         if computer.model == select
                             Recommendation.where(customer_id: customer.id, computer_id: computer.id).destroy_all
