@@ -172,16 +172,18 @@ class Cli
         end
     end
 
+    #the follow methods allow our customers to save their computer recommendation and potentially add another one.
+
     def new_recommendation
         puts "Would you like to get a new recommendation y/n?"
         answer_two = gets.chomp.downcase
         if answer_two == "y"
-                computer_selection 
+            computer_selection 
         elsif answer_two == "n"  
-                puts "Thanks for visting Khajiits Komputers. Have a nice day!"
+            puts "Thanks for letting Khajiit help you today."
         else
-                puts "Please select y or n!"
-                new_recommendation
+            puts "Please select y or n!"
+            new_recommendation
         end
     end
 
@@ -191,7 +193,7 @@ class Cli
         if answer_three == "y"
             computer_selection
         elsif answer_three == "n"
-            puts "Thanks for visiting Khajiits Komputers. Have a nice day!"
+            puts "Thanks for letting Khajiit help you today."
         else
             puts "Please select y or n!"
             additional_recommendation
@@ -213,6 +215,9 @@ class Cli
         end
     end
   
+    #The following methods allow our customer to refer the the computer they found to a friend and creates a new customer if their friend does
+    #not exists in our database yet!
+
     def find_friend_by_name
         puts "What is your friends full name?"
         friend_name = gets.chomp.downcase
@@ -251,6 +256,7 @@ class Cli
             create_account_for_friend 
         else
             puts "Please select y or n"
+            sleep(1)
             has_friend_visited
         end
     end
@@ -266,6 +272,7 @@ class Cli
             store_front
         else
             puts "Please select y or n!"
+            sleep(1)
             refer_to_a_friend
         end
     end
@@ -293,6 +300,7 @@ class Cli
         refer_to_a_friend
     end
 
+    #breaks if you enter a name not found, need to fix this
     def wishlist
         puts "Provide your name: "
         name = gets.chomp.downcase
