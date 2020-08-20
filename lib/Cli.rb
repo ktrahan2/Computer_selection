@@ -3,7 +3,6 @@ class Cli
    attr_accessor :dimensions, :function, :price, :user, :name, :age, :email, :final_computer
 
     def tty_prompt
-        # help_color = Pastel.new.italic.bright_yellow.detach
         TTY::Prompt.new(
 
         symbols: { marker: '💻' },
@@ -299,11 +298,10 @@ class Cli
         select_price
         system  "clear"
         computer_selected = Computer.where(dimensions: @dimensions.capitalize, function: @function) 
-        puts Ascii.store_name #change later to khajiit random ascii
+        puts Ascii.store_name 
         puts "Khajiit has listened and chosen:"
         @final_computer = computer_selected.select do |computer| 
             computer.price <= (@price.to_f)*1000
-            #binding.pry
         end
         @final_computer.max_by(0) { |x| x.price }
         sleep(2)
@@ -334,6 +332,7 @@ class Cli
                 store_front
             elsif array_brands.size == 1
                 puts "Here are your saved recommendations!"
+                puts " "
                 puts array_brands
                 answer = @prompt.yes?("Would you like to delete this model from your wishlist?")
                 if answer == true
@@ -347,8 +346,10 @@ class Cli
                 store_front
             else
                 puts "Here are your saved recommendations!"
+                puts " "
                 puts array_brands
-                selected = @prompt.multi_select("Which models would you like to delete from your wishlist?", array_brands, help: "Scroll with arrows and select with space bar! Hit enter to finalize.", show_help: :always, min: 0, filter: true)
+                puts " "
+                selected = @prompt.multi_select("Which models would you like to delete from your wishlist? If none hit enter.", array_brands, help: "Scroll with arrows and select with space bar! Hit enter to finalize.", show_help: :always, min: 0, filter: true)
                 selected.each do |select|
                     recommended_computers.each do |computer|
                         if computer.model == select
