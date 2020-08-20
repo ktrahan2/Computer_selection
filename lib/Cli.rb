@@ -12,8 +12,6 @@ class Cli
         @email = nil
         @final_computer = nil
     end
-    #look into cleaning this up? possible to move some functions around so there are less intialized attributes? 
-    #does it even matter?
   
     def store_front
         prompt = TTY::Prompt.new
@@ -78,6 +76,7 @@ class Cli
         else
         end
     end
+
     #could adjust it to make them put in a valid email with @###.com, dont care that much right now.
     def select_email
         puts "Whats your email? Remember your email is case sensitive!"
