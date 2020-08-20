@@ -2,6 +2,15 @@ class Cli
   
    attr_accessor :dimensions, :function, :price, :user, :name, :age, :email, :final_computer
 
+    def tty_prompt
+        # help_color = Pastel.new.italic.bright_yellow.detach
+        TTY::Prompt.new(
+        symbols: { marker: '>' },
+        active_color: :cyan,
+        help_color: :bright_cyan
+        )
+    end
+
     def initialize dimensions = nil, function = nil, price = nil, user = nil, name = nil, age = nil, email = nil, final_computer = nil
         @dimensions = nil
         @function = nil
@@ -11,18 +20,17 @@ class Cli
         @age = nil
         @email = nil
         @final_computer = nil
+        @prompt = tty_prompt
     end
   
     #possibly change order of mainmenu to be Find a computer with Khajiit, choose by brand, wishlist
     def store_front
-        prompt = TTY::Prompt.new
-        main_menu = prompt.select("Choose one option") do |menu|
+        main_menu = @prompt.select("Choose one option") do |menu|
             # menu.cycle true  # so that selection cycles around when reach top or bottom
             menu.choice "Find a Computer with Khajiit!", 1 #store_introduction
             menu.choice "Wishlist", 2 #wishlist #maybe rename this to recommendations/returning customer recommendations
             menu.choice "Choose by brand", 3 # desired value
         end
-
         if main_menu == 1
             store_introduction
         elsif main_menu == 2
@@ -33,9 +41,8 @@ class Cli
     end
 
     def brands
-        prompt = TTY::Prompt.new
         choices = Computer.all.map {|computer| computer.brand}
-        chosen = prompt.multi_select("Choose the brands you like: ", choices.uniq)
+        chosen = @prompt.multi_select("Choose the brands you like: ", choices.uniq, help: "Scroll with arrows and select with space bar!", show_help: :always, min: 1, filter: true)
         puts "Here are the computers we have from those specific brands: "
         for i in 0...chosen.length do
             computer = Computer.where brand: chosen[i]
@@ -44,26 +51,20 @@ class Cli
                 puts comp.model + " " + comp.function + " " + comp.price.to_s
             end
         end
-    end
-    
-    def select_name
-        puts "What is your full name?" #.colorize( :blue ).colorize( :background => :green) just testing colors
-        @name = gets.chomp.downcase
+        main_menu = @prompt.select("Choose where you want to go back: ") do |menu|
+            menu.choice "Find Computer", 1
+            menu.choice "Wishlist", 2
+        end
+        if main_menu == 1
+            store_introduction
+        elsif main_menu == 2
+            wishlist
+        end
     end
 
     def select_friends_name
         puts "What is your friends full name?"
         @friends_name = gets.chomp.downcase
-    end
-
-    def select_age
-        puts "How old are you?"
-        @age = gets.chomp
-        if (age != '0') && (age.to_i.to_s != age.strip)
-            puts "Khajiit can only read ages in numbers!"
-            sleep(2)
-            select_age
-        end
     end
 
     def select_friends_age
@@ -74,12 +75,6 @@ class Cli
             sleep(2)
             select_friends_age
         end
-    end
-
-    #could adjust it to make them put in a valid email with @###.com, dont care that much right now.
-    def select_email
-        puts "Whats your email? Remember your email is case sensitive!"
-        @email = gets.chomp
     end
 
     def select_friends_email
@@ -104,9 +99,16 @@ class Cli
 
     def new_customer        
         puts "Khajiit has computers if you have answers!"
-        select_name
-        select_age
-        select_email
+        d = @prompt.collect do
+            key(:name).ask("Name?")
+          
+            key(:age).ask("Age?", convert: :int)
+
+            key(:email).ask("Email?")
+        end
+        @name = d[:name]
+        @age = d[:age]
+        @email = d[:email]
         @user = Customer.create(name: @name, age: @age, email: @email)
         puts "Welcome #{@name}, Khajiit is here to serve."
         system "clear"
@@ -167,14 +169,42 @@ class Cli
     #returns the price user is willing to spend, should repeat select_price if it isnt a valid entry
     def select_price
         puts Ascii.store_name #change later to khajiit random ascii
-        puts "Finally, how much are you looking to spend?"
-        @price = gets.chomp
-        if (@price != '0') && (@price.to_i.to_s != @price.strip)
-            puts "Please pick a number!"
-            sleep(2)
-            select_price
+        puts "Finally, how much are you looking to spend? ($1000 = $1.000)"
+        case @function
+        when "gaming"
+            @price = @prompt.slider("Price", min: 0.5, max: 2, step: 0.05, format: "|:slider| $ %.3f", show_help: :always)
+        when "video editing"
+            @price = @prompt.slider("Price", min: 0.7, max: 5, step: 0.05, format: "|:slider| $ %.3f", show_help: :always)
+        when "web development"
+            @price = @prompt.slider("Price", min: 0.6, max: 2.2, step: 0.05, format: "|:slider| $ %.3f", show_help: :always)
+        when "web browsing"
+            @price = @prompt.slider("Price", min: 0.3, max: 1, step: 0.05, format: "|:slider| $ %.3f", show_help: :always)
+        end
+    end
+
+    def new_recommendation
+        puts "Would you like to get a new recommendation y/n?"
+        answer_two = gets.chomp.downcase
+        if answer_two == "y"
+            computer_selection 
+        elsif answer_two == "n"  
+            puts "Thanks for letting Khajiit help you today."
         else
-            puts "Rahjin's shadow, Khajiit is pleased!"
+            puts "Please select y or n!"
+            new_recommendation
+        end
+    end
+    
+    def additional_recommendation
+        puts "Would you like to get another recommendation y/n>"
+        answer_three = gets.chomp.downcase
+        if answer_three == "y"
+            computer_selection
+        elsif answer_three == "n"
+            puts "Thanks for letting Khajiit help you today."
+        else
+            puts "Please select y or n!"
+            additional_recommendation
         end
     end
 
@@ -219,7 +249,7 @@ class Cli
             puts "Please select y or n"
             recommend
         end
-    end
+    end 
   
     #The following methods allow our customer to refer the the computer they found to a friend and creates a new customer if their friend does
     #not exists in our database yet!
@@ -296,28 +326,33 @@ class Cli
         puts Ascii.store_name #change later to khajiit random ascii
         puts "Khajiit has listened and chosen:"
         @final_computer = computer_selected.select do |computer| 
-            computer.price <= @price.to_f
+            computer.price <= (@price.to_f)*1000
+            #binding.pry
         end
         @final_computer.max_by(0) { |x| x.price }
         sleep(2)
         puts @final_computer[0].brand + " " + @final_computer[0].model
-      
         recommend
         sleep(2)
         refer_to_a_friend
     end
 
-    #breaks if you enter a name not found, need to fix this
     def wishlist
         puts "Provide your name: "
         name = gets.chomp.downcase
         customer = Customer.find_by name: name
-        recommended_computers = customer.computers
-        puts "Here are your recommendations!"
-        for i in 0...recommended_computers.length do
-            puts recommended_computers[i].brand + " " + recommended_computers[i].model
+        if !customer
+            puts "You haven't saved any recommendations yet. Go checkout our amazing computers!"
+            store_front
+        else
+            recommended_computers = customer.computers
+            puts "Here are your recommendations!"
+            array_brands = Array.new
+            for i in 0...recommended_computers.length do
+                array_brands << recommended_computers[i]
+            end
+            binding.pry
+            @prompt.multi_select("Choose the brands you like: ", array_brands, help: "Scroll with arrows and select with space bar!", show_help: :always, min: 1, filter: true)
         end
     end
-
-        
 end
