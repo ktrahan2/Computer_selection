@@ -23,27 +23,28 @@ class Cli
         @prompt = tty_prompt
     end
   
-    #possibly change order of mainmenu to be Find a computer with Khajiit, choose by brand, wishlist
     def store_front
         main_menu = @prompt.select("Choose one option") do |menu|
-            # menu.cycle true  # so that selection cycles around when reach top or bottom
-            menu.choice "Find a Computer with Khajiit!", 1 #store_introduction
-            menu.choice "Wishlist", 2 #wishlist #maybe rename this to recommendations/returning customer recommendations
-            menu.choice "Choose by brand", 3 # desired value
+            menu.choice "Find a Computer with Khajiit!", 1 
+            menu.choice "View by brand", 2 
+            menu.choice "Wishlist", 3 
+            menu.choice "Exit", 4
         end
         if main_menu == 1
             store_introduction
         elsif main_menu == 2
-            wishlist
-        elsif main_menu == 3
             brands
+        elsif main_menu == 3
+            wishlist
+        elsif main_menu == 4
+            exit
         end
     end
 
     def brands
         choices = Computer.all.map {|computer| computer.brand}
         chosen = @prompt.multi_select("Choose the brands you like: ", choices.uniq, help: "Scroll with arrows and select with space bar!", show_help: :always, min: 1, filter: true)
-        puts "Here are the computers we have from those specific brands: "
+        puts "Here are the computers we have available: "
         for i in 0...chosen.length do
             computer = Computer.where brand: chosen[i]
             puts chosen[i]   
@@ -51,8 +52,8 @@ class Cli
                 puts comp.model + " " + comp.function + " " + comp.price.to_s
             end
         end
-        main_menu = @prompt.select("Choose where you want to go back: ") do |menu|
-            menu.choice "Find Computer", 1
+        main_menu = @prompt.select("Where would you like to go next: ") do |menu|
+            menu.choice "Find a Computer with Khajiit!", 1
             menu.choice "Wishlist", 2
         end
         if main_menu == 1
@@ -61,26 +62,6 @@ class Cli
             wishlist
         end
     end
-
-    # def select_friends_name
-    #     puts "What is your friends full name?"
-    #     @friends_name = gets.chomp.downcase
-    # end
-
-    # def select_friends_age
-    #     puts "How old is your friend?"
-    #     @friends_age = gets.chomp
-    #     if (@friends_age != '0') && (@friends_age.to_i.to_s != @friends_age.strip)
-    #         puts "Khajiit can only read ages in numbers!"
-    #         sleep(2)
-    #         select_friends_age
-    #     end
-    # end
-
-    # def select_friends_email
-    #     puts "Whats your friends email? Remember the email is case sensitive!"
-    #     @friends_email = gets.chomp
-    # end
 
     def select_friends
         d = @prompt.collect do
@@ -97,8 +78,6 @@ class Cli
         @friends_email = d[:email]
     end
     
-
-
     def returning_customer
         puts "Remind Khajiit what your name is?"
         user_name = gets.chomp.downcase
@@ -185,7 +164,7 @@ class Cli
         end
     end
 
-    #returns the price user is willing to spend, should repeat select_price if it isnt a valid entry
+    #returns the price the user is willing to spend, should repeat select_price if it isnt a valid entry
     def select_price
         puts Ascii.store_name #change later to khajiit random ascii
         puts "Finally, how much are you looking to spend? ($1000 = $1.000)"
@@ -207,7 +186,6 @@ class Cli
         if answer_three == "y"
             computer_selection
         elsif answer_three == "n"
-            puts "Thanks for letting Khajiit help you today."
         else
             puts "Please select y or n!"
             additional_recommendation
@@ -332,10 +310,15 @@ class Cli
                 puts "Sorry, you do not have any saved recommendations yet!"
                 store_front
             elsif array_brands.size == 1
-                @prompt.yes?("Would you like to delete this model from your wishlist?")
+                answer = @prompt.yes?("Would you like to delete this model from your wishlist?")
+                if answer == true
                 Recommendation.where(customer_id: customer.id).destroy_all
+                elsif answer == false
+                    puts "Have a good day!"
+                end
+                store_front
             else
-                selected = @prompt.multi_select("Which models would you like to delete from your wishlist?", array_brands, help: "Scroll with arrows and select with space bar!", show_help: :always, min: 1, filter: true)
+                selected = @prompt.multi_select("Which models would you like to delete from your wishlist?", array_brands, help: "Scroll with arrows and select with space bar! Hit enter to finalize.", show_help: :always, min: 0, filter: true)
                 variable = selected.each do |select|
                     recommended_computers.each do |computer|
                         if computer.model == select
@@ -343,8 +326,15 @@ class Cli
                         end
                     end
                 end
-                # Recommendation.where(customer_id: customer.id)
+                store_front
             end
         end
     end
+
+    def exit
+        system "clear"
+        puts "Thanks for visiting Khajiits Komputers!"
+        exit!
+    end
+
 end
