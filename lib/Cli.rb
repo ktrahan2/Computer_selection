@@ -19,7 +19,7 @@ class Cli
         prompt = TTY::Prompt.new
         main_menu = prompt.select("Choose one option") do |menu|
             # menu.cycle true  # so that selection cycles around when reach top or bottom
-            menu.choice "Find Computer with Khajiit!", 1 #store_introduction
+            menu.choice "Find a     Computer with Khajiit!", 1 #store_introduction
             menu.choice "Wishlist", 2 #wishlist #maybe rename this to recommendations/returning customer recommendations
             menu.choice "Choose by brand", 3 # desired value
         end
@@ -40,7 +40,6 @@ class Cli
         puts "Here are the computers we have from those specific brands: "
         for i in 0...chosen.length do
             computer = Computer.where brand: chosen[i]
-            # binding.pry
             puts chosen[i]   
             computer.each do |comp|
                 puts comp.model + " " + comp.function + " " + comp.price.to_s
@@ -123,6 +122,7 @@ class Cli
             store_introduction
         end
     end
+ 
 
     def select_dimensions
         puts Ascii.store_name #change later to khajiit random ascii
@@ -209,10 +209,15 @@ class Cli
                 puts "What is your friends full name?"
                 friend_name = gets.chomp.downcase
                 friend_account = Customer.find_by name: friend_name 
+                if !friend_account
+                    puts "I don't think your friend has been here before!"
+                    refer_to_a_friend
+                else
                 Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend_account.id, number: rand(10 ** 10))
                 puts "Absolutely wonderful! We'll add that computer to #{friend_name}s recommendations"
                 sleep(2)
                 store_front
+                end
             else
                 puts "I will just need a little bit of information about your friend!"
                 select_friends_name
