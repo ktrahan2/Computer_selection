@@ -12,15 +12,14 @@ class Cli
         @email = nil
         @final_computer = nil
     end
-    #look into cleaning this up? possible to move some functions around so there are less intialized attributes? 
-    #does it even matter?
   
+    #possibly change order of mainmenu to be Find a computer with Khajiit, choose by brand, wishlist
     def store_front
         prompt = TTY::Prompt.new
         main_menu = prompt.select("Choose one option") do |menu|
             # menu.cycle true  # so that selection cycles around when reach top or bottom
-            menu.choice "Find Computer", 1 #store_introduction
-            menu.choice "Wishlist", 2 #wishlist
+            menu.choice "Find a Computer with Khajiit!", 1 #store_introduction
+            menu.choice "Wishlist", 2 #wishlist #maybe rename this to recommendations/returning customer recommendations
             menu.choice "Choose by brand", 3 # desired value
         end
 
@@ -40,7 +39,6 @@ class Cli
         puts "Here are the computers we have from those specific brands: "
         for i in 0...chosen.length do
             computer = Computer.where brand: chosen[i]
-            # binding.pry
             puts chosen[i]   
             computer.each do |comp|
                 puts comp.model + " " + comp.function + " " + comp.price.to_s
@@ -49,7 +47,7 @@ class Cli
     end
     
     def select_name
-        puts "What is your full name?" #.colorize( :blue ).colorize( :background => :green)
+        puts "What is your full name?" #.colorize( :blue ).colorize( :background => :green) just testing colors
         @name = gets.chomp.downcase
     end
 
@@ -65,7 +63,6 @@ class Cli
             puts "Khajiit can only read ages in numbers!"
             sleep(2)
             select_age
-        else
         end
     end
 
@@ -76,9 +73,9 @@ class Cli
             puts "Khajiit can only read ages in numbers!"
             sleep(2)
             select_friends_age
-        else
         end
     end
+
     #could adjust it to make them put in a valid email with @###.com, dont care that much right now.
     def select_email
         puts "Whats your email? Remember your email is case sensitive!"
@@ -90,20 +87,22 @@ class Cli
         @friends_email = gets.chomp
     end
 
-    #gets some information from the user and also inputs a new row into the Customer table
-    def store_introduction 
-        puts Ascii.store_name
-        puts "Welcome to Khoosing a Komputer with Khajiit" 
-        puts "Is this your first time visiting Khajiit y/n?"
-        answer = gets.chomp.downcase
-        if answer == "n"
-            puts "Remind Khajiit what your name is?"
-            user_name = gets.chomp.downcase
-            # binding.pry
-            @user = Customer.find_by name: user_name
-            puts "Welcome back! #{@user.name}"
-            computer_selection
+    def returning_customer
+        puts "Remind Khajiit what your name is?"
+        user_name = gets.chomp.downcase
+        @user = Customer.find_by name: user_name
+        if !@user
+            puts "I don't think you have been here before!"
+            sleep(2)
+            new_customer
         else
+            puts "Welcome back! #{@user.name}"
+            sleep(1)
+            computer_selection
+        end
+    end
+
+    def new_customer        
         puts "Khajiit has computers if you have answers!"
         select_name
         select_age
@@ -113,9 +112,25 @@ class Cli
         system "clear"
         sleep(2)
         computer_selection
-        end
     end
 
+    #checks if its a returning customer or new customer and either finds that customer or makes a new one. 
+    def store_introduction 
+        puts Ascii.store_name
+        puts "Welcome to Khoosing a Komputer with Khajiit" 
+        puts "Is this your first time visiting Khajiit y/n?"
+        answer = gets.chomp.downcase
+        if answer == "n"
+            returning_customer
+        elsif answer == "y"
+            new_customer
+        else
+            puts "Please enter y or n"
+            sleep(2)
+            store_introduction
+        end
+    end
+ 
     def select_dimensions
         puts Ascii.store_name #change later to khajiit random ascii
         puts "Are you looking for a laptop or desktop?"
@@ -163,69 +178,112 @@ class Cli
         end
     end
 
+    #the follow methods allow our customers to save their computer recommendation and potentially add another one.
+
+    def new_recommendation
+        puts "Would you like to get a new recommendation y/n?"
+        answer_two = gets.chomp.downcase
+        if answer_two == "y"
+            computer_selection 
+        elsif answer_two == "n"  
+            puts "Thanks for letting Khajiit help you today."
+        else
+            puts "Please select y or n!"
+            new_recommendation
+        end
+    end
+
+    def additional_recommendation
+        puts "Would you like to get another recommendation y/n>"
+        answer_three = gets.chomp.downcase
+        if answer_three == "y"
+            computer_selection
+        elsif answer_three == "n"
+            puts "Thanks for letting Khajiit help you today."
+        else
+            puts "Please select y or n!"
+            additional_recommendation
+        end
+    end
+
     def recommend
         puts "Would you like to add this computer to your recommendations y/n?"
         answer = gets.chomp.downcase
         if answer == "y"
             puts "The #{@final_computer[0].brand} computer has been added to your recommendations list."
             Recommendation.create(computer_id: @final_computer[0].id, customer_id: @user.id, number: rand(10** 10))
-            #look into saving Recommendation to @recommendation so you can access it through another method later.
-            puts "Would you like to get another recommendation y/n>"
-            answer_three = gets.chomp.downcase
-            if answer_three == "y"
-                computer_selection
-            else
-                puts "Thanks for visiting Khajiits Komputers. Have a nice day!"
-                # store_front
-            end
+            additional_recommendation
+        elsif answer == "n"
+            new_recommendation
         else
-            puts "Would you like to get a new recommendation y/n?"
-            answer_two = gets.chomp.downcase
-            if answer_two == "y"
-                computer_selection 
-            else     
-                puts "Thanks for visting Khajiits Komputers. Have a nice day!"
-                # store_front
-            end
+            puts "Please select y or n"
+            recommend
         end
     end
   
-    #this method is huge, could be worked down. 
-    def refer_to_a_friend
-        puts "Would you like to recommend this computer to a friend y/n?"
-        answer = gets.chomp.downcase
-        if answer == "y"
-            puts "Has your friend visited us before y/n?"
-            answer_two = gets.chomp.downcase
-            if answer_two == "y"
-                puts "What is your friends full name?"
-                friend_name = gets.chomp.downcase
-                friend_account = Customer.find_by name: friend_name 
-                Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend_account.id, number: rand(10 ** 10))
-                puts "Absolutely wonderful! We'll add that computer to #{friend_name}s recommendations"
-                sleep(2)
-                store_front
-            else
-                puts "I will just need a little bit of information about your friend!"
-                select_friends_name
-                select_friends_age
-                select_friends_email
-                friend = Customer.create(name: @friends_name, age: @friends_age, email: @friends_email)
-                puts "Perfect your friend has been added to our memberslist!"
-                Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend.id, number: rand(10 ** 10))
-                puts "Wonderful! We'll add that computer to #{@friends_name}s recommendations!"
-                sleep(2)
-                store_front 
-            end
+    #The following methods allow our customer to refer the the computer they found to a friend and creates a new customer if their friend does
+    #not exists in our database yet!
+
+    def find_friend_by_name
+        puts "What is your friends full name?"
+        friend_name = gets.chomp.downcase
+        friend_account = Customer.find_by name: friend_name 
+        if !friend_account
+            puts "I don't think your friend has been here before!"
+            sleep(1)
+            create_account_for_friend
         else
-            puts "No worries, Khajiit doesn't have any friends either. Have a good day!"
+            Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend_account.id, number: rand(10 ** 10))
+            puts "Absolutely wonderful! We'll add that computer to #{friend_name}s recommendations"
             sleep(2)
             store_front
         end
     end
 
-   #collects information and returns a single computer based off of user input, allows user to save the recommendation to
-   #hopefully be accessed later
+    def create_account_for_friend
+        puts "I will just need a little bit of information about your friend!"
+        select_friends_name
+        select_friends_age
+        select_friends_email
+        friend = Customer.create(name: @friends_name, age: @friends_age, email: @friends_email)
+        puts "Perfect your friend has been added to our memberslist!"
+        Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend.id, number: rand(10 ** 10))
+        puts "Wonderful! We'll add that computer to #{@friends_name}s recommendations!"
+        sleep(2)
+        store_front
+    end
+
+    def has_friend_visited
+        puts "Has your friend visited us before y/n?"
+        answer_two = gets.chomp.downcase
+        if answer_two == "y"
+            find_friend_by_name
+        elsif answer_two == "n"
+            create_account_for_friend 
+        else
+            puts "Please select y or n"
+            sleep(1)
+            has_friend_visited
+        end
+    end
+         
+    def refer_to_a_friend
+        puts "Would you like to recommend this computer to a friend y/n?"
+        answer = gets.chomp.downcase
+        if answer == "y"
+            has_friend_visited
+        elsif answer == "n"
+            puts "No worries, Khajiit doesn't have any friends either. Have a good day!"
+            sleep(2)
+            store_front
+        else
+            puts "Please select y or n!"
+            sleep(1)
+            refer_to_a_friend
+        end
+    end
+
+   #collects information and returns a single computer based off of user input, allows user to save the recommendation and/or refer to a friend
     def computer_selection
         #add some type of ascii art
         puts "Time to find out what kind of komputer you are looking for!"
@@ -240,14 +298,16 @@ class Cli
         @final_computer = computer_selected.select do |computer| 
             computer.price <= @price.to_f
         end
-        @final_computer.max_by(0) { |x| x.length }
+        @final_computer.max_by(0) { |x| x.price }
         sleep(2)
         puts @final_computer[0].brand + " " + @final_computer[0].model
+      
         recommend
         sleep(2)
         refer_to_a_friend
     end
 
+    #breaks if you enter a name not found, need to fix this
     def wishlist
         puts "Provide your name: "
         name = gets.chomp.downcase
