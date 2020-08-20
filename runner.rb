@@ -4,6 +4,6 @@ app = Cli.new
 # binding.pry
 system "clear"
 app.store_front
-# binding.pry
+binding.pry
 
 
