@@ -84,7 +84,9 @@ class Cli
 
     def select_friends
         d = @prompt.collect do
-            key(:name).ask("Name?")
+            key(:name).ask("Name?") do |word|
+                word.modify :down
+            end
           
             key(:age).ask("Age?", convert: :int)
 
@@ -94,6 +96,7 @@ class Cli
         @friends_age = d[:age]
         @friends_email = d[:email]
     end
+    
 
 
     def returning_customer
@@ -114,7 +117,9 @@ class Cli
     def new_customer        
         puts "Khajiit has computers if you have answers!"
         d = @prompt.collect do
-            key(:name).ask("Name?")
+            key(:name).ask("Name?")do |word|
+            word.modify :down
+        end
           
             key(:age).ask("Age?", convert: :int)
 
@@ -340,7 +345,6 @@ class Cli
                 end
                 # Recommendation.where(customer_id: customer.id)
             end
-            binding.pry
         end
     end
     
