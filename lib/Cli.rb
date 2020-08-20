@@ -5,9 +5,9 @@ class Cli
     def tty_prompt
         # help_color = Pastel.new.italic.bright_yellow.detach
         TTY::Prompt.new(
-        symbols: { marker: '>' },
-        active_color: :cyan,
-        help_color: :bright_cyan
+        symbols: { marker: '💻' },
+        active_color: :red,
+        help_color: :red
         )
     end
 
@@ -109,7 +109,7 @@ class Cli
         @email = d[:email]
         @user = Customer.create(name: @name, age: @age, email: @email)
         puts "Welcome #{@name}, Khajiit is here to serve."
-        system "clear"
+        system  "clear"
         sleep(2)
         computer_selection
     end
@@ -137,9 +137,13 @@ class Cli
         if @dimensions == "laptop"
             puts Ascii.laptop
             puts "Awesome we have plenty of #{@dimensions}s"
+            sleep (2)
+            system "clear"
         elsif  @dimensions == "desktop"
             puts Ascii.desktop
             puts "Awesome we have plenty of #{@dimensions}s"
+            sleep (2)
+            system "clear"
         else
             puts "Please pick either laptop or desktop"
             sleep(2)
@@ -154,15 +158,23 @@ class Cli
         when "gaming"
             puts Ascii.gaming
             puts "Fantastic Khajiit loves #{@function}. My favorite game is Hello Kitty Island Adventure"
+            sleep (2)
+            system "clear"
         when "video editing"
             puts Ascii.video_editing
             puts "Fantastic Khajiit loves #{@function}."
+            sleep (2)
+            system "clear"
         when "web development"
             puts Ascii.web_development
             puts "Fantastic Khajiit loves #{@function}."
+            sleep (2)
+            system "clear"
         when "web browsing"
             puts Ascii.web_browsing
             puts "Fantastic Khajiit loves #{@function}."
+            sleep (2)
+            system "clear"
         else 
             puts "Please pick a valid option!"
             sleep(2)
@@ -172,8 +184,8 @@ class Cli
 
     #returns the price the user is willing to spend, should repeat select_price if it isnt a valid entry
     def select_price
-        puts Ascii.store_name #change later to khajiit random ascii
         puts "Finally, how much are you looking to spend? ($1000 = $1.000)"
+        puts Ascii.price
         case @function
         when "gaming"
             @price = @prompt.slider("Price", min: 0.5, max: 2, step: 0.05, format: "|:slider| $ %.3f", show_help: :always)
@@ -275,13 +287,10 @@ class Cli
 
    #collects information and returns a single computer based off of user input, allows user to save the recommendation and/or refer to a friend
     def computer_selection
-        #add some type of ascii art
-        puts "Time to find out what kind of komputer you are looking for!"
-        sleep(2)
         select_dimensions
         select_function
         select_price
-        system "clear"
+        system  "clear"
         computer_selected = Computer.where(dimensions: @dimensions.capitalize, function: @function) 
         puts Ascii.store_name #change later to khajiit random ascii
         puts "Khajiit has listened and chosen:"
@@ -291,7 +300,9 @@ class Cli
         end
         @final_computer.max_by(0) { |x| x.price }
         sleep(2)
+        puts " "
         puts @final_computer[0].brand + " " + @final_computer[0].model
+        puts " "
         recommend
         sleep(2)
         refer_to_a_friend
