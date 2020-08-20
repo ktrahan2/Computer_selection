@@ -112,7 +112,7 @@ class Cli
         @email = d[:email]
         @user = Customer.create(name: @name, age: @age, email: @email)
         puts "Welcome #{@name}, Khajiit is here to serve."
-        system  "clear"
+        system "clear"
         sleep(2)
         computer_selection
     end
@@ -254,7 +254,7 @@ class Cli
         friend = Customer.create(name: @friends_name, age: @friends_age, email: @friends_email)
         puts "Perfect your friend has been added to our memberslist!"
         Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend.id, number: rand(10 ** 10))
-        puts "Wonderful! We'll add that computer to #{@friends_name}s recommendations!"
+        puts "Wonderful! We'll add that computer to #{@friends_name}'s recommendations!"
         sleep(2)
         store_front
     end
@@ -327,6 +327,7 @@ class Cli
             end
             if array_brands.size == 0
                 puts "Sorry, you do not have any saved recommendations yet!"
+                puts " "
                 store_front
             elsif array_brands.size == 1
                 puts "Here are your saved recommendations!"
@@ -337,6 +338,9 @@ class Cli
                 elsif answer == false
                     puts "Have a good day!"
                 end
+                puts " "
+                puts "Your chosen models have been removed from your wishlist!"
+                puts " "
                 store_front
             else
                 puts "Here are your saved recommendations!"
@@ -349,6 +353,9 @@ class Cli
                         end
                     end
                 end
+                puts " "
+                puts "Your chosen models have been removed from your wishlist!"
+                puts " "
                 store_front
             end
         end
