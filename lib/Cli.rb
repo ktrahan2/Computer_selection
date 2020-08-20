@@ -5,9 +5,11 @@ class Cli
     def tty_prompt
         # help_color = Pastel.new.italic.bright_yellow.detach
         TTY::Prompt.new(
-        symbols: { marker: '>' },
+
+        symbols: { marker: '💻' },
         active_color: :red,
-        help_color: :bright_cyan
+        help_color: :red
+
         )
     end
 
@@ -45,12 +47,15 @@ class Cli
         choices = Computer.all.map {|computer| computer.brand}
         chosen = @prompt.multi_select("Choose the brands you like: ", choices.uniq, help: "Scroll with arrows and select with space bar!", show_help: :always, min: 1, filter: true)
         puts "Here are the computers we have available: "
+        puts " "
         for i in 0...chosen.length do
             computer = Computer.where brand: chosen[i]
             puts chosen[i]   
+            puts " "
             computer.each do |comp|
-                puts comp.model + " " + comp.function + " " + comp.price.to_s
-            end
+                puts comp.model + " " + "for" + " " + comp.function + " " + "at" + " " + "$" + comp.price.to_s
+            end 
+            puts " "
         end
         main_menu = @prompt.select("Where would you like to go next: ") do |menu|
             menu.choice "Find a Computer with Khajiit!", 1
@@ -137,9 +142,13 @@ class Cli
         if @dimensions == "laptop"
             puts Ascii.laptop
             puts "Awesome we have plenty of #{@dimensions}s"
+            sleep (2)
+            system "clear"
         elsif  @dimensions == "desktop"
             puts Ascii.desktop
             puts "Awesome we have plenty of #{@dimensions}s"
+            sleep (2)
+            system "clear"
         else
             puts "Please pick either laptop or desktop"
             sleep(2)
@@ -154,15 +163,23 @@ class Cli
         when "gaming"
             puts Ascii.gaming
             puts "Fantastic Khajiit loves #{@function}. My favorite game is Hello Kitty Island Adventure"
+            sleep (2)
+            system "clear"
         when "video editing"
             puts Ascii.video_editing
             puts "Fantastic Khajiit loves #{@function}."
+            sleep (2)
+            system "clear"
         when "web development"
             puts Ascii.web_development
             puts "Fantastic Khajiit loves #{@function}."
+            sleep (2)
+            system "clear"
         when "web browsing"
             puts Ascii.web_browsing
             puts "Fantastic Khajiit loves #{@function}."
+            sleep (2)
+            system "clear"
         else 
             puts "Please pick a valid option!"
             sleep(2)
@@ -172,8 +189,10 @@ class Cli
 
     #returns the price the user is willing to spend, should repeat select_price if it isnt a valid entry
     def select_price
-        puts Ascii.store_name 
+ 
         puts "Finally, how much are you looking to spend? ($1000 = $1.000)"
+        puts " "
+        puts Ascii.price
         case @function
         when "gaming"
             @price = @prompt.slider("Price", min: 0.5, max: 2, step: 0.05, format: "|:slider| $ %.3f", show_help: :always)
@@ -238,7 +257,7 @@ class Cli
         friend = Customer.create(name: @friends_name, age: @friends_age, email: @friends_email)
         puts "Perfect your friend has been added to our memberslist!"
         Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend.id, number: rand(10 ** 10))
-        puts "Wonderful! We'll add that computer to #{@friends_name}s recommendations!"
+        puts "Wonderful! We'll add that computer to #{@friends_name}'s recommendations!"
         sleep(2)
         store_front
     end
@@ -275,13 +294,10 @@ class Cli
 
    #collects information and returns a single computer based off of user input, allows user to save the recommendation and/or refer to a friend
     def computer_selection
-        #add some type of ascii art
-        puts "Time to find out what kind of komputer you are looking for!"
-        sleep(2)
         select_dimensions
         select_function
         select_price
-        system "clear"
+        system  "clear"
         computer_selected = Computer.where(dimensions: @dimensions.capitalize, function: @function) 
         puts Ascii.store_name #change later to khajiit random ascii
         puts "Khajiit has listened and chosen:"
@@ -291,7 +307,9 @@ class Cli
         end
         @final_computer.max_by(0) { |x| x.price }
         sleep(2)
+        puts " "
         puts @final_computer[0].brand + " " + @final_computer[0].model
+        puts " "
         recommend
         sleep(2)
         refer_to_a_friend
@@ -306,24 +324,30 @@ class Cli
             store_front
         else
             recommended_computers = customer.computers
-            puts "Here are your saved recommendations!"
             array_brands = Array.new
             for i in 0...recommended_computers.length do
                 array_brands << recommended_computers[i].model #+ " " + recommended_computers[i].price.to_s
             end
-            puts array_brands
             if array_brands.size == 0
                 puts "Sorry, you do not have any saved recommendations yet!"
+                puts " "
                 store_front
             elsif array_brands.size == 1
+                puts "Here are your saved recommendations!"
+                puts array_brands
                 answer = @prompt.yes?("Would you like to delete this model from your wishlist?")
                 if answer == true
                 Recommendation.where(customer_id: customer.id).destroy_all
                 elsif answer == false
                     puts "Have a good day!"
                 end
+                puts " "
+                puts "Your chosen models have been removed from your wishlist!"
+                puts " "
                 store_front
             else
+                puts "Here are your saved recommendations!"
+                puts array_brands
                 selected = @prompt.multi_select("Which models would you like to delete from your wishlist?", array_brands, help: "Scroll with arrows and select with space bar! Hit enter to finalize.", show_help: :always, min: 0, filter: true)
                 selected.each do |select|
                     recommended_computers.each do |computer|
@@ -332,6 +356,9 @@ class Cli
                         end
                     end
                 end
+                puts " "
+                puts "Your chosen models have been removed from your wishlist!"
+                puts " "
                 store_front
             end
         end
