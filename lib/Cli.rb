@@ -63,7 +63,6 @@ class Cli
             puts "Khajiit can only read ages in numbers!"
             sleep(2)
             select_age
-        else
         end
     end
 
@@ -74,7 +73,6 @@ class Cli
             puts "Khajiit can only read ages in numbers!"
             sleep(2)
             select_friends_age
-        else
         end
     end
 
@@ -104,7 +102,7 @@ class Cli
         end
     end
 
-    def new_customer    
+    def new_customer        
         puts "Khajiit has computers if you have answers!"
         select_name
         select_age
