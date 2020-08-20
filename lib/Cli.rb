@@ -184,24 +184,27 @@ class Cli
                 new_recommendation
         end
     end
-    
+
+    def additional_recommendation
+        puts "Would you like to get another recommendation y/n>"
+        answer_three = gets.chomp.downcase
+        if answer_three == "y"
+            computer_selection
+        elsif answer_three == "n"
+            puts "Thanks for visiting Khajiits Komputers. Have a nice day!"
+        else
+            puts "Please select y or n!"
+            additional_recommendation
+        end
+    end
+
     def recommend
         puts "Would you like to add this computer to your recommendations y/n?"
         answer = gets.chomp.downcase
         if answer == "y"
             puts "The #{@final_computer[0].brand} computer has been added to your recommendations list."
             Recommendation.create(computer_id: @final_computer[0].id, customer_id: @user.id, number: rand(10** 10))
-            #look into saving Recommendation to @recommendation so you can access it through another method later.
-            puts "Would you like to get another recommendation y/n>"
-            answer_three = gets.chomp.downcase
-            if answer_three == "y"
-                computer_selection
-            elsif answer_three == "n"
-                puts "Thanks for visiting Khajiits Komputers. Have a nice day!"
-            else
-                puts "Please select y or n!"
-                recommend
-            end
+            additional_recommendation
         elsif answer == "n"
             new_recommendation
         else
@@ -210,38 +213,52 @@ class Cli
         end
     end
   
-    #this method is huge, could be worked down. 
+    def find_friend_by_name
+        puts "What is your friends full name?"
+        friend_name = gets.chomp.downcase
+        friend_account = Customer.find_by name: friend_name 
+        if !friend_account
+            puts "I don't think your friend has been here before!"
+            refer_to_a_friend
+        else
+            Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend_account.id, number: rand(10 ** 10))
+            puts "Absolutely wonderful! We'll add that computer to #{friend_name}s recommendations"
+            sleep(2)
+            store_front
+        end
+    end
+
+    def create_account_for_friend
+        puts "I will just need a little bit of information about your friend!"
+        select_friends_name
+        select_friends_age
+        select_friends_email
+        friend = Customer.create(name: @friends_name, age: @friends_age, email: @friends_email)
+        puts "Perfect your friend has been added to our memberslist!"
+        Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend.id, number: rand(10 ** 10))
+        puts "Wonderful! We'll add that computer to #{@friends_name}s recommendations!"
+        sleep(2)
+        store_front
+    end
+
+    def has_friend_visited
+        puts "Has your friend visited us before y/n?"
+        answer_two = gets.chomp.downcase
+        if answer_two == "y"
+            find_friend_by_name
+        elsif answer_two == "n"
+            create_account_for_friend 
+        else
+            puts "Please select y or n"
+            has_friend_visited
+        end
+    end
+         
     def refer_to_a_friend
         puts "Would you like to recommend this computer to a friend y/n?"
         answer = gets.chomp.downcase
         if answer == "y"
-            puts "Has your friend visited us before y/n?"
-            answer_two = gets.chomp.downcase
-            if answer_two == "y"
-                puts "What is your friends full name?"
-                friend_name = gets.chomp.downcase
-                friend_account = Customer.find_by name: friend_name 
-                if !friend_account
-                    puts "I don't think your friend has been here before!"
-                    refer_to_a_friend
-                else
-                Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend_account.id, number: rand(10 ** 10))
-                puts "Absolutely wonderful! We'll add that computer to #{friend_name}s recommendations"
-                sleep(2)
-                store_front
-                end
-            else
-                puts "I will just need a little bit of information about your friend!"
-                select_friends_name
-                select_friends_age
-                select_friends_email
-                friend = Customer.create(name: @friends_name, age: @friends_age, email: @friends_email)
-                puts "Perfect your friend has been added to our memberslist!"
-                Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend.id, number: rand(10 ** 10))
-                puts "Wonderful! We'll add that computer to #{@friends_name}s recommendations!"
-                sleep(2)
-                store_front 
-            end
+            has_friend_visited
         elsif answer == "n"
             puts "No worries, Khajiit doesn't have any friends either. Have a good day!"
             sleep(2)
@@ -252,8 +269,7 @@ class Cli
         end
     end
 
-   #collects information and returns a single computer based off of user input, allows user to save the recommendation to
-   #hopefully be accessed later
+   #collects information and returns a single computer based off of user input, allows user to save the recommendation and/or refer to a friend
     def computer_selection
         #add some type of ascii art
         puts "Time to find out what kind of komputer you are looking for!"
