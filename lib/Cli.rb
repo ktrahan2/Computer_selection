@@ -182,19 +182,6 @@ class Cli
         end
     end
 
-    def new_recommendation
-        puts "Would you like to get a new recommendation y/n?"
-        answer_two = gets.chomp.downcase
-        if answer_two == "y"
-            computer_selection 
-        elsif answer_two == "n"  
-            puts "Thanks for letting Khajiit help you today."
-        else
-            puts "Please select y or n!"
-            new_recommendation
-        end
-    end
-    
     def additional_recommendation
         puts "Would you like to get another recommendation y/n>"
         answer_three = gets.chomp.downcase
@@ -210,32 +197,6 @@ class Cli
 
     #the follow methods allow our customers to save their computer recommendation and potentially add another one.
 
-    def new_recommendation
-        puts "Would you like to get a new recommendation y/n?"
-        answer_two = gets.chomp.downcase
-        if answer_two == "y"
-            computer_selection 
-        elsif answer_two == "n"  
-            puts "Thanks for letting Khajiit help you today."
-        else
-            puts "Please select y or n!"
-            new_recommendation
-        end
-    end
-
-    def additional_recommendation
-        puts "Would you like to get another recommendation y/n>"
-        answer_three = gets.chomp.downcase
-        if answer_three == "y"
-            computer_selection
-        elsif answer_three == "n"
-            puts "Thanks for letting Khajiit help you today."
-        else
-            puts "Please select y or n!"
-            additional_recommendation
-        end
-    end
-
     def recommend
         puts "Would you like to add this computer to your recommendations y/n?"
         answer = gets.chomp.downcase
@@ -244,7 +205,7 @@ class Cli
             Recommendation.create(computer_id: @final_computer[0].id, customer_id: @user.id, number: rand(10** 10))
             additional_recommendation
         elsif answer == "n"
-            new_recommendation
+            additional_recommendation
         else
             puts "Please select y or n"
             recommend
