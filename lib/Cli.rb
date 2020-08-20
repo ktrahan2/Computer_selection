@@ -62,25 +62,39 @@ class Cli
         end
     end
 
-    def select_friends_name
-        puts "What is your friends full name?"
-        @friends_name = gets.chomp.downcase
-    end
+    # def select_friends_name
+    #     puts "What is your friends full name?"
+    #     @friends_name = gets.chomp.downcase
+    # end
 
-    def select_friends_age
-        puts "How old is your friend?"
-        @friends_age = gets.chomp
-        if (@friends_age != '0') && (@friends_age.to_i.to_s != @friends_age.strip)
-            puts "Khajiit can only read ages in numbers!"
-            sleep(2)
-            select_friends_age
+    # def select_friends_age
+    #     puts "How old is your friend?"
+    #     @friends_age = gets.chomp
+    #     if (@friends_age != '0') && (@friends_age.to_i.to_s != @friends_age.strip)
+    #         puts "Khajiit can only read ages in numbers!"
+    #         sleep(2)
+    #         select_friends_age
+    #     end
+    # end
+
+    # def select_friends_email
+    #     puts "Whats your friends email? Remember the email is case sensitive!"
+    #     @friends_email = gets.chomp
+    # end
+
+    def select_friends
+        d = @prompt.collect do
+            key(:name).ask("Name?")
+          
+            key(:age).ask("Age?", convert: :int)
+
+            key(:email).ask("Email?")
         end
+        @friends_name = d[:name]
+        @friends_age = d[:age]
+        @friends_email = d[:email]
     end
 
-    def select_friends_email
-        puts "Whats your friends email? Remember the email is case sensitive!"
-        @friends_email = gets.chomp
-    end
 
     def returning_customer
         puts "Remind Khajiit what your name is?"
@@ -195,8 +209,6 @@ class Cli
         end
     end
 
-    #the follow methods allow our customers to save their computer recommendation and potentially add another one.
-
     def recommend
         puts "Would you like to add this computer to your recommendations y/n?"
         answer = gets.chomp.downcase
@@ -233,9 +245,7 @@ class Cli
 
     def create_account_for_friend
         puts "I will just need a little bit of information about your friend!"
-        select_friends_name
-        select_friends_age
-        select_friends_email
+        select_friends
         friend = Customer.create(name: @friends_name, age: @friends_age, email: @friends_email)
         puts "Perfect your friend has been added to our memberslist!"
         Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend.id, number: rand(10 ** 10))
@@ -307,13 +317,22 @@ class Cli
             store_front
         else
             recommended_computers = customer.computers
-            puts "Here are your recommendations!"
+            puts "Here are your saved recommendations!"
             array_brands = Array.new
             for i in 0...recommended_computers.length do
-                array_brands << recommended_computers[i]
+                array_brands << recommended_computers[i].model + " " + recommended_computers[i].price.to_s
             end
-            binding.pry
-            @prompt.multi_select("Choose the brands you like: ", array_brands, help: "Scroll with arrows and select with space bar!", show_help: :always, min: 1, filter: true)
+            puts array_brands
+            if array_brands.size == 0
+                puts "Sorry, you do not have any saved recommendations yet!"
+                store_front
+            elsif array_brands.size == 1
+                @prompt.yes?("Would you like to delete this model from your wishlist?")
+                Recommendation.where(customer_id: customer.id).destroy_all
+            else
+                selected = @prompt.multi_select("Which models would you like to delete from your wishlist?", array_brands, help: "Scroll with arrows and select with space bar!", show_help: :always, min: 1, filter: true)
+                Recommendation.where(customer_id: customer.id)
+            end
         end
     end
 end
