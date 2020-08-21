@@ -2,6 +2,16 @@
 
 An app for finding computer recommendations!
 
+## Table of Contents
+- [Description](https://github.com/ktrahan2/Computer_selection#description)
+- [Gifs](https://github.com/ktrahan2/Computer_selection#gifs-section-for-victor)
+- [Example Code](https://github.com/ktrahan2/Computer_selection#example-code)
+- [Technology Used](https://github.com/ktrahan2/Computer_selection#technology-used)
+- [Setting up for the Application](https://github.com/ktrahan2/Computer_selection#setting-up-for-the-application)
+- [Main Features](https://github.com/ktrahan2/Computer_selection#main-features)
+- [Features in Progress](https://github.com/ktrahan2/Computer_selection#features-in-progress)
+- [Contact Information](https://github.com/ktrahan2/Computer_selection#contact-information)
+
 ## Description
 
 Khajiits Khomputers is a CLI application that allows a user to register as a customer, and then find recommendations for a new computer based off of their preferences. The user can also access their saved recommendations via their wishlist. Alternatively the user can view all available computers based off the brand. 
@@ -11,7 +21,6 @@ Khajiits Khomputers is a CLI application that allows a user to register as a cus
 ![](gif-price-to-comp-selection.gif)
 ![](gif-brands.gif)
 ![](gif-wishlist.gif)
-
 
 
 ## Example Code
@@ -70,7 +79,7 @@ Khajiits Khomputers is a CLI application that allows a user to register as a cus
 - Colorize
 - TTY-spinner
 
-## Setting up the program
+## Setting up for the application
 
 First you must run
 
@@ -89,7 +98,7 @@ Then in order to run the app:
 - Access Wishlist and remove previous recommendations
 - Recommend a computer to a friend and create the friend a customer account 
 
-## Features in waiting
+## Features in Progress
 
 - Clean up redundancy in code
 - Save computer recommendations based off brands feature
