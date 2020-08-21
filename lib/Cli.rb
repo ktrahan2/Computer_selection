@@ -218,7 +218,6 @@ class Cli
     end
 
     def select_price
- 
         puts "Finally, how much are you looking to spend? ($1000 = $1.000)"
         puts " "
         puts Ascii.price
@@ -343,7 +342,7 @@ class Cli
         system  "clear"
         computer_selected = Computer.where(dimensions: @dimensions.capitalize, function: @function)
         slider
-        puts Ascii.store_name #change later to khajiit random ascii
+        puts Ascii.store_name
         puts "Khajiit has listened and chosen:"
         @final_computer = computer_selected.select do |computer| 
             computer.price <= (@price.to_f)*1000
