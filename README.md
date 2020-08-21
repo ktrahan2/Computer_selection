@@ -4,7 +4,7 @@ An app for finding computer recommendations!
 
 ## Table of Contents
 - [Description](https://github.com/ktrahan2/Computer_selection#description)
-- [Gifs](https://github.com/ktrahan2/Computer_selection#gifs-section-for-victor)
+- [Gifs](https://github.com/ktrahan2/Computer_selection#gifs)
 - [Example Code](https://github.com/ktrahan2/Computer_selection#example-code)
 - [Technology Used](https://github.com/ktrahan2/Computer_selection#technology-used)
 - [Setting up for the Application](https://github.com/ktrahan2/Computer_selection#setting-up-for-the-application)
