@@ -4,14 +4,15 @@ An app for finding computer recommendations!
 
 ## Description
 
-Khajiits Khomputers is a CLI application that allows a user to register as a customer, and then find recommendations for a new computer based off of their preferences. The user can also access their saved recommendations via their wishlist. The user will also have access to seeing what computers are in the store based on computer brands. 
+Khajiits Khomputers is a CLI application that allows a user to register as a customer, and then find recommendations for a new computer based off of their preferences. The user can also access their saved recommendations via their wishlist. Alternatively the user can view all available computers based off the brand. 
 
 ## Gifs section for victor
 
 
 ## Example Code
 
-``` def new_customer        
+``` 
+    def new_customer        
         puts "Khajiit has computers if you have answers!"
         d = @prompt.collect do
             key(:name).ask("Name?")do |word|
@@ -32,7 +33,8 @@ Khajiits Khomputers is a CLI application that allows a user to register as a cus
         computer_selection
     end
 ```
-``` def store_introduction 
+``` 
+      def store_introduction 
         system "clear"
         puts Ascii.store_name
         puts "Welcome to " +  "Khoosing".colorize( :red ) + " a " + "Komputer".colorize( :red ) +  " with " + "Khajiit".colorize(:red)
@@ -49,19 +51,19 @@ Khajiits Khomputers is a CLI application that allows a user to register as a cus
             system "clear"
             store_introduction
         end
-    end
+      end
 ```
 
 ## Technology Used
 
-Activerecord version 6.0
-Sinatra-activerecord version 2.0
-Rake version 13.0
-Sqlite3 version 1.4
-Require_all version 3.0
-TTY-prompt
-Colorize
-TTY-spinner
+- Activerecord version 6.0
+- Sinatra-activerecord version 2.0
+- Rake version 13.0
+- Sqlite3 version 1.4
+- Require_all version 3.0
+- TTY-prompt
+- Colorize
+- TTY-spinner
 
 ## Setting up the program
 
@@ -76,10 +78,10 @@ Then in order to run the app:
 ## Main Features
 
 - User can add themselves to a customers list
-- User can find a recommended computer based off of user feedback
-- Browse computer choices by brand
-- Save recommendations to wishlist
-- Access wishlist and remove previous recommendations
+- User can find a recommended computer based off of their preferences 
+- Browse computer choices by Brand
+- Save recommendations to Wishlist
+- Access Wishlist and remove previous recommendations
 - Recommend a computer to a friend and create the friend a customer account 
 
 ## Features in waiting
@@ -90,7 +92,7 @@ Then in order to run the app:
 
 ## Contact Information
 
-Created by Victor Amigo and Kyle Trahan
+Created by [Victor]() Amigo and [Kyle Trahan](https://www.linkedin.com/in/kyle-trahan-8384678b/)
 
 Please contact us with any questions!
 
