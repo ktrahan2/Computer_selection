@@ -54,10 +54,10 @@ class Cli
         puts " "
         for i in 0...chosen.length do
             computer = Computer.where brand: chosen[i]
-            puts chosen[i]   
+            puts chosen[i].colorize( :green)   
             puts " "
             computer.each do |comp|
-                puts comp.model + " " + "for" + " " + comp.function + " " + "at" + " " + "$" + comp.price.to_s
+                puts comp.model + " " + "for" + " " + comp.function + " " + "at" + " " + "$".colorize(:green) + comp.price.to_s.colorize(:light_red)
             end 
             puts " "
         end
@@ -66,8 +66,10 @@ class Cli
             menu.choice "Wishlist", 2
         end
         if main_menu == 1
+            system "clear"
             store_introduction
         elsif main_menu == 2
+            system "clear"
             wishlist
         end
     end
@@ -328,7 +330,7 @@ class Cli
     end
 
     def wishlist
-        puts "Provide your name: "
+        puts "Provide your" + " " + "name".colorize(:light_red) + " " + "to see your previous recommendations: "
         name = gets.chomp.downcase
         customer = Customer.find_by name: name
         if !customer
@@ -363,7 +365,7 @@ class Cli
                 puts " "
                 puts array_brands
                 puts " "
-                selected = @prompt.multi_select("Which models would you like to delete from your wishlist? If none hit enter.", array_brands, help: "Scroll with arrows and select with space bar! Hit enter to finalize.", show_help: :always, min: 0, filter: true)
+                selected = @prompt.multi_select("Which models would you like to delete from your wishlist?" + " " + "If none hit enter.".colorize(:green), array_brands, help: "Scroll with arrows and select with space bar! Hit enter to finalize.", show_help: :always, min: 0, filter: true)
                 selected.each do |select|
                     recommended_computers.each do |computer|
                         if computer.model == select
@@ -373,7 +375,7 @@ class Cli
                 end
                 puts " "
                 puts "Your select computers have been removed from your wishlist!"
-                sleep(4)
+                sleep(3)
                 system "clear"
                 store_front
             end
