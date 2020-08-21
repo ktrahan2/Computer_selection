@@ -92,7 +92,7 @@ Then in order to run the app:
 
 ## Contact Information
 
-Created by [Victor]() Amigo and [Kyle Trahan](https://www.linkedin.com/in/kyle-trahan-8384678b/)
+Created by [Victor Amigo](https://www.linkedin.com/in/victor-amigo-76146115b/) and [Kyle Trahan](https://www.linkedin.com/in/kyle-trahan-8384678b/)
 
 Please contact us with any questions!
 
