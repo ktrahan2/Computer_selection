@@ -18,8 +18,13 @@ Khajiits Khomputers is a CLI application that allows a user to register as a cus
 
 ## Gifs
 
+After providing some personal info and choosing the desired dimension, function and price, Khajiit Khomputers returns the best computer for each customer!
 ![](gif-price-to-comp-selection.gif)
+
+If undecisive, customers can scroll or filter through our large inventory of computers and checkout which brands and models we sell.
 ![](gif-brands.gif)
+
+There's also a wishlist feature that allows returning customers to see and/or delete their past saved recommendations.
 ![](gif-wishlist.gif)
 
 
