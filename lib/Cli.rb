@@ -146,6 +146,7 @@ class Cli
     end
  
     def select_dimensions
+        puts Ascii.select_random
         puts "Are you looking for a laptop or desktop?"
         @dimensions = gets.chomp.downcase
         if @dimensions == "laptop"
@@ -166,6 +167,7 @@ class Cli
     end
 
     def select_function
+        puts Ascii.select_random
         puts "In stock we have komputers efficient in gaming, video editing, web development or web browsing. What do you need?"
         @function = gets.chomp.downcase
         case @function
@@ -382,7 +384,6 @@ class Cli
         system "clear"
         puts Ascii.thanks
         puts Ascii.store_name
-        #add an ascii art for goodbye
         exit!
     end
 
