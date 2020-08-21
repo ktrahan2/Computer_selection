@@ -248,7 +248,7 @@ class Cli
     #The following methods allow our customer to refer to the computer they found to a friend and creates a new customer if their friend does
     #not exists in our database yet!
 
-    #could just use code from returning customer
+    #could just use code from returning customer. Where has all the time gone?
     def find_friend_by_name
         puts "What is your friends full name?"
         friend_name = gets.chomp.downcase
