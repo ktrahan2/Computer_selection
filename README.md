@@ -16,10 +16,11 @@ An app for finding computer recommendations!
 
 Khajiits Khomputers is a CLI application that allows a user to register as a customer, and then find recommendations for a new computer based off of their preferences. The user can also access their saved recommendations via their wishlist. Alternatively the user can view all available computers based off the brand. 
 
-## Gifs section for victor
+## Gifs
 
-![Store Introduction](gif-store-intro.gif)
-
+![](gif-price-to-comp-selection.gif)
+![](gif-brands.gif)
+![](gif-wishlist.gif)
 
 
 ## Example Code
