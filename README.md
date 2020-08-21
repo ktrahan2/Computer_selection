@@ -12,6 +12,7 @@ After providing some personal info and choosing the desired dimension, function 
 ![](gif-price-to-comp-selection.gif)
 
 If undecisive, customers can scroll or filter through our large inventory of computers and checkout which brands and models we sell.
+
 ![](gif-brands.gif)
 
 There's also a wishlist feature that allows returning customers to see and/or delete their past saved recommendations.
