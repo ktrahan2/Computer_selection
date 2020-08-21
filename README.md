@@ -3,14 +3,14 @@
 An app for finding computer recommendations!
 
 ## Table of Contents
-[Description]()
-[Gifs]()
-[Example Code]()
-[Technology Used]()
-[Setting up for the Application]()
-[Main Features]()
-[Features in Progress]()
-[Contact Information]()
+- [Description]()
+- [Gifs]()
+- [Example Code]()
+- [Technology Used]()
+- [Setting up for the Application]()
+- [Main Features]()
+- [Features in Progress]()
+- [Contact Information]()
 
 ## Description
 
