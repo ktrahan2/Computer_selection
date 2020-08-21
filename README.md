@@ -18,6 +18,9 @@ Khajiits Khomputers is a CLI application that allows a user to register as a cus
 
 ## Gifs section for victor
 
+![](gif-store-intro.gif)
+
+
 
 ## Example Code
 
