@@ -3,7 +3,6 @@ class Cli
    attr_accessor :dimensions, :function, :price, :user, :name, :age, :email, :final_computer
 
     def tty_prompt
-        # help_color = Pastel.new.italic.bright_yellow.detach
         TTY::Prompt.new(
 
         symbols: { marker: '💻' },
@@ -26,6 +25,8 @@ class Cli
     end
   
     def store_front
+        puts Ascii.welcome
+        puts Ascii.store_name
         main_menu = @prompt.select("Choose one option") do |menu|
             menu.choice "Find a Computer with Khajiit!", 1 
             menu.choice "View by brand", 2 
@@ -33,10 +34,13 @@ class Cli
             menu.choice "Exit", 4
         end
         if main_menu == 1
+            system "clear"
             store_introduction
         elsif main_menu == 2
+            system "clear"
             brands
         elsif main_menu == 3
+            system "clear"
             wishlist
         elsif main_menu == 4
             exit
@@ -50,10 +54,10 @@ class Cli
         puts " "
         for i in 0...chosen.length do
             computer = Computer.where brand: chosen[i]
-            puts chosen[i]   
+            puts chosen[i].colorize( :green)   
             puts " "
             computer.each do |comp|
-                puts comp.model + " " + "for" + " " + comp.function + " " + "at" + " " + "$" + comp.price.to_s
+                puts comp.model + " " + "for" + " " + comp.function + " " + "at" + " " + "$".colorize(:green) + comp.price.to_s.colorize(:light_red)
             end 
             puts " "
         end
@@ -62,8 +66,10 @@ class Cli
             menu.choice "Wishlist", 2
         end
         if main_menu == 1
+            system "clear"
             store_introduction
         elsif main_menu == 2
+            system "clear"
             wishlist
         end
     end
@@ -89,11 +95,14 @@ class Cli
         @user = Customer.find_by name: user_name
         if !@user
             puts "I don't think you have been here before!"
-            sleep(2)
+            sleep(3)
+            system "clear"
             new_customer
         else
+            puts " "
             puts "Welcome back! #{@user.name}"
-            sleep(1)
+            sleep(3)
+            system "clear"
             computer_selection
         end
     end
@@ -115,7 +124,7 @@ class Cli
         @user = Customer.create(name: @name, age: @age, email: @email)
         puts "Welcome #{@name}, Khajiit is here to serve."
         system "clear"
-        sleep(2)
+        sleep(3)
         computer_selection
     end
 
@@ -123,6 +132,7 @@ class Cli
     def store_introduction 
         puts Ascii.store_name
         puts "Welcome to Khoosing a Komputer with Khajiit" 
+        puts " "
         puts "Is this your first time visiting Khajiit y/n?"
         answer = gets.chomp.downcase
         if answer == "n"
@@ -131,12 +141,14 @@ class Cli
             new_customer
         else
             puts "Please enter y or n"
-            sleep(2)
+            sleep(3)
+            system "clear"
             store_introduction
         end
     end
  
     def select_dimensions
+        puts Ascii.select_random
         puts "Are you looking for a laptop or desktop?"
         @dimensions = gets.chomp.downcase
         if @dimensions == "laptop"
@@ -157,37 +169,37 @@ class Cli
     end
 
     def select_function
+        puts Ascii.select_random
         puts "In stock we have komputers efficient in gaming, video editing, web development or web browsing. What do you need?"
         @function = gets.chomp.downcase
         case @function
         when "gaming"
             puts Ascii.gaming
             puts "Fantastic Khajiit loves #{@function}. My favorite game is Hello Kitty Island Adventure"
-            sleep (2)
+            sleep (4)
             system "clear"
         when "video editing"
             puts Ascii.video_editing
             puts "Fantastic Khajiit loves #{@function}."
-            sleep (2)
+            sleep (4)
             system "clear"
         when "web development"
             puts Ascii.web_development
             puts "Fantastic Khajiit loves #{@function}."
-            sleep (2)
+            sleep (4)
             system "clear"
         when "web browsing"
             puts Ascii.web_browsing
             puts "Fantastic Khajiit loves #{@function}."
-            sleep (2)
+            sleep (4)
             system "clear"
         else 
             puts "Please pick a valid option!"
-            sleep(2)
+            sleep(3)
             select_function
         end
     end
 
-    #returns the price the user is willing to spend, should repeat select_price if it isnt a valid entry
     def select_price
  
         puts "Finally, how much are you looking to spend? ($1000 = $1.000)"
@@ -222,6 +234,7 @@ class Cli
         answer = gets.chomp.downcase
         if answer == "y"
             puts "The #{@final_computer[0].brand} computer has been added to your recommendations list."
+            puts " "
             Recommendation.create(computer_id: @final_computer[0].id, customer_id: @user.id, number: rand(10** 10))
             additional_recommendation
         elsif answer == "n"
@@ -232,25 +245,26 @@ class Cli
         end
     end 
   
-    #The following methods allow our customer to refer the the computer they found to a friend and creates a new customer if their friend does
+    #The following methods allow our customer to refer to the computer they found to a friend and creates a new customer if their friend does
     #not exists in our database yet!
 
+    #could just use code from returning customer. Where has all the time gone?
     def find_friend_by_name
         puts "What is your friends full name?"
         friend_name = gets.chomp.downcase
         friend_account = Customer.find_by name: friend_name 
         if !friend_account
             puts "I don't think your friend has been here before!"
-            sleep(1)
+            sleep(3)
             create_account_for_friend
         else
             Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend_account.id, number: rand(10 ** 10))
             puts "Absolutely wonderful! We'll add that computer to #{friend_name}s recommendations"
-            sleep(2)
+            sleep(3)
             store_front
         end
     end
-
+    #could use create customer to get rid of most of this method. 
     def create_account_for_friend
         puts "I will just need a little bit of information about your friend!"
         select_friends
@@ -258,7 +272,7 @@ class Cli
         puts "Perfect your friend has been added to our memberslist!"
         Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend.id, number: rand(10 ** 10))
         puts "Wonderful! We'll add that computer to #{@friends_name}'s recommendations!"
-        sleep(2)
+        sleep(3)
         store_front
     end
 
@@ -271,7 +285,7 @@ class Cli
             create_account_for_friend 
         else
             puts "Please select y or n"
-            sleep(1)
+            sleep(3)
             has_friend_visited
         end
     end
@@ -283,11 +297,12 @@ class Cli
             has_friend_visited
         elsif answer == "n"
             puts "No worries, Khajiit doesn't have any friends either. Have a good day!"
-            sleep(2)
+            sleep(3)
+            system "clear"
             store_front
         else
             puts "Please select y or n!"
-            sleep(1)
+            sleep(3)
             refer_to_a_friend
         end
     end
@@ -299,11 +314,10 @@ class Cli
         select_price
         system  "clear"
         computer_selected = Computer.where(dimensions: @dimensions.capitalize, function: @function) 
-        puts Ascii.store_name #change later to khajiit random ascii
+        puts Ascii.store_name 
         puts "Khajiit has listened and chosen:"
         @final_computer = computer_selected.select do |computer| 
             computer.price <= (@price.to_f)*1000
-            #binding.pry
         end
         @final_computer.max_by(0) { |x| x.price }
         sleep(2)
@@ -316,7 +330,7 @@ class Cli
     end
 
     def wishlist
-        puts "Provide your name: "
+        puts "Provide your" + " " + "name".colorize(:light_red) + " " + "to see your previous recommendations: "
         name = gets.chomp.downcase
         customer = Customer.find_by name: name
         if !customer
@@ -326,7 +340,7 @@ class Cli
             recommended_computers = customer.computers
             array_brands = Array.new
             for i in 0...recommended_computers.length do
-                array_brands << recommended_computers[i].model #+ " " + recommended_computers[i].price.to_s
+                array_brands << recommended_computers[i].model 
             end
             if array_brands.size == 0
                 puts "Sorry, you do not have any saved recommendations yet!"
@@ -334,6 +348,7 @@ class Cli
                 store_front
             elsif array_brands.size == 1
                 puts "Here are your saved recommendations!"
+                puts " "
                 puts array_brands
                 answer = @prompt.yes?("Would you like to delete this model from your wishlist?")
                 if answer == true
@@ -347,8 +362,10 @@ class Cli
                 store_front
             else
                 puts "Here are your saved recommendations!"
+                puts " "
                 puts array_brands
-                selected = @prompt.multi_select("Which models would you like to delete from your wishlist?", array_brands, help: "Scroll with arrows and select with space bar! Hit enter to finalize.", show_help: :always, min: 0, filter: true)
+                puts " "
+                selected = @prompt.multi_select("Which models would you like to delete from your wishlist?" + " " + "If none hit enter.".colorize(:green), array_brands, help: "Scroll with arrows and select with space bar! Hit enter to finalize.", show_help: :always, min: 0, filter: true)
                 selected.each do |select|
                     recommended_computers.each do |computer|
                         if computer.model == select
@@ -357,8 +374,9 @@ class Cli
                     end
                 end
                 puts " "
-                puts "Your chosen models have been removed from your wishlist!"
-                puts " "
+                puts "Your select computers have been removed from your wishlist!"
+                sleep(3)
+                system "clear"
                 store_front
             end
         end
@@ -366,7 +384,8 @@ class Cli
 
     def exit
         system "clear"
-        puts "Thanks for visiting Khajiits Komputers!"
+        puts Ascii.thanks
+        puts Ascii.store_name
         exit!
     end
 
