@@ -12,6 +12,11 @@ class Cli
         )
     end
 
+    def tty_spinner
+        TTY::Spinner.new("[:spinner] Khajiit thinking...", format: :shark)
+    end
+
+
     def initialize dimensions = nil, function = nil, price = nil, user = nil, name = nil, age = nil, email = nil, final_computer = nil
         @dimensions = nil
         @function = nil
@@ -22,6 +27,7 @@ class Cli
         @email = nil
         @final_computer = nil
         @prompt = tty_prompt
+        @spinner = tty_spinner
     end
   
     def store_front
@@ -30,7 +36,7 @@ class Cli
         main_menu = @prompt.select("Choose one option") do |menu|
             menu.choice "Find a Computer with Khajiit!", 1 
             menu.choice "View by brand", 2 
-            menu.choice "Wishlist", 3 
+            menu.choice "Wishlist", 2 
             menu.choice "Exit", 4
         end
         if main_menu == 1
@@ -50,14 +56,15 @@ class Cli
     def brands
         choices = Computer.all.map {|computer| computer.brand}
         chosen = @prompt.multi_select("Choose the brands you like: ", choices.uniq, help: "Scroll with arrows and select with space bar!", show_help: :always, min: 1, filter: true)
+        slider
         puts "Here are the computers we have available: "
         puts " "
         for i in 0...chosen.length do
             computer = Computer.where brand: chosen[i]
-            puts chosen[i].colorize( :green)   
+            puts chosen[i].colorize( :light_red ).underline   
             puts " "
             computer.each do |comp|
-                puts comp.model + " " + "for" + " " + comp.function + " " + "at" + " " + "$".colorize(:green) + comp.price.to_s.colorize(:light_red)
+                puts "-" + (comp.model).colorize( :red ) + " " + "for" + " " + comp.function + " " + "at" + " " + ("$" + comp.price.to_s).colorize( :green )
             end 
             puts " "
         end
@@ -88,11 +95,20 @@ class Cli
         @friends_age = d[:age]
         @friends_email = d[:email]
     end
+
+    def slider
+        puts " "
+        @spinner.run("💡") do |spinner|
+            sleep(2)
+        end
+        puts " "
+    end
     
     def returning_customer
         puts "Remind Khajiit what your name is?"
         user_name = gets.chomp.downcase
         @user = Customer.find_by name: user_name
+        slider
         if !@user
             puts "I don't think you have been here before!"
             sleep(3)
@@ -130,10 +146,11 @@ class Cli
 
     #checks if its a returning customer or new customer and either finds that customer or makes a new one. 
     def store_introduction 
+        system "clear"
         puts Ascii.store_name
-        puts "Welcome to Khoosing a Komputer with Khajiit" 
+        puts "Welcome to " +  "Khoosing".colorize( :red ) + " a " + "Komputer".colorize( :red ) +  " with " + "Khajiit".colorize(:red)
         puts " "
-        puts "Is this your first time visiting Khajiit y/n?"
+        puts "Is this your " + "first time".underline + " visiting Khajiit y/n?"
         answer = gets.chomp.downcase
         if answer == "n"
             returning_customer
@@ -170,7 +187,7 @@ class Cli
 
     def select_function
         puts Ascii.select_random
-        puts "In stock we have komputers efficient in gaming, video editing, web development or web browsing. What do you need?"
+        puts "In stock we have komputers efficient in " +  "gaming".underline + ", " + "video editing".underline + ", " + "web development".underline + " and " + "web browsing".underline + ". What do you need?"
         @function = gets.chomp.downcase
         case @function
         when "gaming"
@@ -207,13 +224,13 @@ class Cli
         puts Ascii.price
         case @function
         when "gaming"
-            @price = @prompt.slider("Price", min: 0.5, max: 2, step: 0.05, format: "|:slider| $ %.3f", show_help: :always)
+            @price = @prompt.slider("Price", min: 0.5, max: 2, step: 0.05, format: "|:slider| $ %.2f", show_help: :always)
         when "video editing"
-            @price = @prompt.slider("Price", min: 0.7, max: 5, step: 0.05, format: "|:slider| $ %.3f", show_help: :always)
+            @price = @prompt.slider("Price", min: 0.7, max: 5, step: 0.05, format: "|:slider| $ %.2f", show_help: :always)
         when "web development"
-            @price = @prompt.slider("Price", min: 0.6, max: 2.2, step: 0.05, format: "|:slider| $ %.3f", show_help: :always)
+            @price = @prompt.slider("Price", min: 0.6, max: 2.2, step: 0.05, format: "|:slider| $ %.2f", show_help: :always)
         when "web browsing"
-            @price = @prompt.slider("Price", min: 0.3, max: 1, step: 0.05, format: "|:slider| $ %.3f", show_help: :always)
+            @price = @prompt.slider("Price", min: 0.2, max: 1, step: 0.05, format: "|:slider| $ %.2f", show_help: :always)
         end
     end
 
@@ -223,6 +240,7 @@ class Cli
         if answer_three == "y"
             computer_selection
         elsif answer_three == "n"
+            refer_to_a_friend
         else
             puts "Please select y or n!"
             additional_recommendation
@@ -230,14 +248,16 @@ class Cli
     end
 
     def recommend
-        puts "Would you like to add this computer to your recommendations y/n?"
+        puts "Would you like to add this computer to your " + "recommendations".underline + " y/n?"
         answer = gets.chomp.downcase
         if answer == "y"
-            puts "The #{@final_computer[0].brand} computer has been added to your recommendations list."
             puts " "
+            puts "The #{@final_computer[0].brand} computer has been added to your " +  "wishlist".underline + "."
             Recommendation.create(computer_id: @final_computer[0].id, customer_id: @user.id, number: rand(10** 10))
+            puts " "
             additional_recommendation
         elsif answer == "n"
+            puts " "
             additional_recommendation
         else
             puts "Please select y or n"
@@ -253,26 +273,33 @@ class Cli
         puts "What is your friends full name?"
         friend_name = gets.chomp.downcase
         friend_account = Customer.find_by name: friend_name 
+        slider
         if !friend_account
             puts "I don't think your friend has been here before!"
-            sleep(3)
+            sleep(2)
             create_account_for_friend
         else
             Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend_account.id, number: rand(10 ** 10))
-            puts "Absolutely wonderful! We'll add that computer to #{friend_name}s recommendations"
-            sleep(3)
+            puts "Absolutely wonderful! We'll add that computer to #{friend_name}'s recommendations"
+            puts " "
+            sleep(2)
+            system "clear"
             store_front
         end
     end
     #could use create customer to get rid of most of this method. 
     def create_account_for_friend
+        puts " "
         puts "I will just need a little bit of information about your friend!"
         select_friends
         friend = Customer.create(name: @friends_name, age: @friends_age, email: @friends_email)
-        puts "Perfect your friend has been added to our memberslist!"
+        puts " "
+        puts "Perfect! Your friend has been added to our memberslist!"
         Recommendation.create(computer_id: @final_computer[0].id, customer_id: friend.id, number: rand(10 ** 10))
-        puts "Wonderful! We'll add that computer to #{@friends_name}'s recommendations!"
-        sleep(3)
+        puts "We'll add that computer to #{@friends_name}'s recommendations!"
+        puts " "
+        sleep(5)
+        system "clear"
         store_front
     end
 
@@ -291,6 +318,7 @@ class Cli
     end
          
     def refer_to_a_friend
+        slider
         puts "Would you like to recommend this computer to a friend y/n?"
         answer = gets.chomp.downcase
         if answer == "y"
@@ -313,8 +341,9 @@ class Cli
         select_function
         select_price
         system  "clear"
-        computer_selected = Computer.where(dimensions: @dimensions.capitalize, function: @function) 
-        puts Ascii.store_name 
+        computer_selected = Computer.where(dimensions: @dimensions.capitalize, function: @function)
+        slider
+        puts Ascii.store_name #change later to khajiit random ascii
         puts "Khajiit has listened and chosen:"
         @final_computer = computer_selected.select do |computer| 
             computer.price <= (@price.to_f)*1000
@@ -322,7 +351,7 @@ class Cli
         @final_computer.max_by(0) { |x| x.price }
         sleep(2)
         puts " "
-        puts @final_computer[0].brand + " " + @final_computer[0].model
+        puts (@final_computer[0].brand + " " + @final_computer[0].model).colorize( :red )
         puts " "
         recommend
         sleep(2)
@@ -333,6 +362,7 @@ class Cli
         puts "Provide your" + " " + "name".colorize(:light_red) + " " + "to see your previous recommendations: "
         name = gets.chomp.downcase
         customer = Customer.find_by name: name
+        puts " "
         if !customer
             puts "You haven't saved any recommendations yet. Go checkout our amazing computers!"
             store_front
@@ -343,24 +373,30 @@ class Cli
                 array_brands << recommended_computers[i].model 
             end
             if array_brands.size == 0
+                slider
                 puts "Sorry, you do not have any saved recommendations yet!"
                 puts " "
                 store_front
             elsif array_brands.size == 1
-                puts "Here are your saved recommendations!"
+                slider
+                puts "Here is your saved recommendation!"
                 puts " "
                 puts array_brands
+                puts " "
                 answer = @prompt.yes?("Would you like to delete this model from your wishlist?")
                 if answer == true
-                Recommendation.where(customer_id: customer.id).destroy_all
-                elsif answer == false
+                    Recommendation.where(customer_id: customer.id).destroy_all
+                    puts " "
+                    puts "Your chosen model has been removed from your wishlist!"
                     puts "Have a good day!"
+                    store_front
+                elsif answer == false
+                    puts " "
+                    puts "Have a good day!"
+                    store_front
                 end
-                puts " "
-                puts "Your chosen models have been removed from your wishlist!"
-                puts " "
-                store_front
             else
+                slider
                 puts "Here are your saved recommendations!"
                 puts " "
                 puts array_brands

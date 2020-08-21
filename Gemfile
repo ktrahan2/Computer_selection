@@ -13,6 +13,7 @@ gem "sqlite3", "~> 1.4"
 gem "require_all", "~> 3.0"
 gem "tty-prompt"
 gem "colorize"
+gem "tty-spinner"
 
 
 
