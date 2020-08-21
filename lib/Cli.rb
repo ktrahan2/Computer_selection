@@ -200,7 +200,6 @@ class Cli
         end
     end
 
-    #returns the price the user is willing to spend, should repeat select_price if it isnt a valid entry
     def select_price
  
         puts "Finally, how much are you looking to spend? ($1000 = $1.000)"
@@ -246,9 +245,10 @@ class Cli
         end
     end 
   
-    #The following methods allow our customer to refer the the computer they found to a friend and creates a new customer if their friend does
+    #The following methods allow our customer to refer to the computer they found to a friend and creates a new customer if their friend does
     #not exists in our database yet!
 
+    #could just use code from returning customer
     def find_friend_by_name
         puts "What is your friends full name?"
         friend_name = gets.chomp.downcase
@@ -264,7 +264,7 @@ class Cli
             store_front
         end
     end
-
+    #could use create customer to get rid of most of this method. 
     def create_account_for_friend
         puts "I will just need a little bit of information about your friend!"
         select_friends
